@@ -1,11 +1,14 @@
 import pygame, sys, json, pprint
 
 class Enemy(pygame.sprite.Sprite): 
-    def __init__(self, x, y): 
+    def __init__(self, x, y, positions, graph): 
         pygame.sprite.Sprite.__init__(self)
         self.current_animation = "idle" # idle
         self.frame = 0
+        self.graph = graph
+        self.df = positions
         self.current_node = "0"
+        self.next_node = "0"
         self.attacking_images = self.get_images("images/undead-executioner-attack", 13)
         self.idle_images = self.get_images("images/undead-executioner-idle", 4)
         self.animations = {
@@ -34,12 +37,15 @@ class Enemy(pygame.sprite.Sprite):
         if self.frame >= len(self.animations[self.current_animation]): 
             self.frame= 0
             self.current_animation = "idle"
-        self.rect.move_ip(1, 0)
+        next_coordinates = self.df.loc[int(self.next_node)]
+        print(next_coordinates)
+        self.rect.center = (next_coordinates.x, next_coordinates.y)
+        self.current_node = self.next_node
 
-    def find_user(self, graph, user_node): 
+    def find_user(self, user_node): 
         visited = {}
         unvisited = {}
-        for node in graph.keys(): 
+        for node in self.graph.keys(): 
             unvisited[node] = [sys.maxsize, None]
 
         unvisited[self.current_node] = [0 , None ]
@@ -47,7 +53,7 @@ class Enemy(pygame.sprite.Sprite):
         while len(unvisited) > 0: 
             
             current_node = f"{min(unvisited, key=unvisited.get)}"
-            neighbours = graph[f"{current_node}"]
+            neighbours = self.graph[f"{current_node}"]
             for node in neighbours: 
                 if node in unvisited.keys(): 
                     cost = unvisited[current_node][0] + neighbours[node]
@@ -67,14 +73,7 @@ class Enemy(pygame.sprite.Sprite):
             previous_node = visited[temporary_node][1]
             path.append(previous_node)
             temporary_node = visited[temporary_node][1]
-        print(f"Path for {node} with cost {visited[str(user_node)][1]}: ", end="")
-        print(path)
-        return visited
-    
-
-
-thing = Enemy(300, 300)
-with open ("./database/graph.json") as file: 
-    dict = json.loads(file.read())
-end = thing.find_user(dict, 27)
-# pprint.pprint(end)
+        if len(path) > 3:
+            self.next_node = (path[-2])
+        else: 
+            self.next_node = self.current_node

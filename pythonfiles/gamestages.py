@@ -106,7 +106,7 @@ class MainGame():
             self.text_objects.add(Text(position[0],position[1], position[2]))
 
 
-    def main_loop(self, screen, game_entities, background): 
+    def main_loop(self, screen, game_entities, background, enemy): 
         while True:
             self.clock.tick(self.fps)
             for event in pygame.event.get():
@@ -117,6 +117,7 @@ class MainGame():
             
             screen.fill('black')
             screen.blit(background, (0, 50))
+            enemy.find_user(self.character.node)
             game_entities.update()
             game_entities.draw(screen)
             self.text_objects.update()
