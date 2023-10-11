@@ -62,8 +62,8 @@ class Enemy(pygame.sprite.Sprite):
     
 
 
-thing = Enemy(300, 300)
-with open ("./database/graph.json") as file: 
-    dict = json.loads(file.read())
-end = thing.find_user(dict)
-pprint.pprint(end)
+# thing = Enemy(300, 300)
+# with open ("./database/graph.json") as file: 
+#     dict = json.loads(file.read())
+# end = thing.find_user(dict)
+# pprint.pprint(end)
