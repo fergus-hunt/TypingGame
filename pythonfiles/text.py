@@ -39,35 +39,6 @@ class Text(pygame.sprite.Sprite):
             num = random.randint(0, 25) 
             text += string.ascii_lowercase[num]
         return text
-        # def get_text(self): 
-        # pd = pandas.read_csv('database\data.csv')
-        # text_index = random.randint(0, len(pd)-1)
-        # text = pd.loc[text_index]
-        # text = "jdfgalkafd;ajlsfsdf"
-        # return text
-
-    # def reset(self):
-    #     self.text= self.get_text()
-    #     self.next_key = 0
-    #     self.is_complete = False
-    #     self.characters_unicode = [character for character in self.text]
-    #     self.characters_completed = ['Na' for index in range(len(self.characters_unicode))]
-    #     self.rect = FONT.get_rect(self.text)
-    #     self.metrics = FONT.get_metrics(self.text)
-    
-    # def register_key(self, event):
-    #     if self.next_key == len(self.characters_completed):
-    #         self.is_complete = True
-    #     else: 
-    #         if event.key == pygame.K_BACKSPACE: 
-    #             self.next_key -= 1
-    #             self.characters_completed[self.next_key] = "Na"
-    #         elif event.unicode == self.characters_unicode[self.next_key]: 
-    #             self.characters_completed[self.next_key] = True
-    #             self.next_key += 1
-    #         elif event.unicode != '': 
-    #             self.characters_completed[self.next_key] = False
-    #             self.next_key += 1
         
     def rendering_text(self):
         x_val = 0
@@ -85,15 +56,3 @@ class Text(pygame.sprite.Sprite):
                 FONT.render_to(self.image, (x_val, self.baseline),character, "red")
                 x_val += metric[4]
 
-
-    def calculating_wpm(self): 
-        total_word = len(self.text.split())
-        total_time = (self.end_time - self.start_time) / 60
-        return round(total_word / (total_time), 2)
-
-    def calculate_errors(self): 
-        sum = 0
-        for i in self.characters_completed: 
-            if i == False:
-                sum += 1
-        return sum
