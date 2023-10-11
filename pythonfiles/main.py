@@ -3,8 +3,8 @@ from tkinter import messagebox
 from text import Text
 import pygame.freetype
 from login import AuthenticateUser
-from databasemanager import DatabaseManager
 from gamestages import * 
+from enemy import Enemy
 pygame.init()
 
 # Login = AuthenticateUser(database_manager=DatabaseManager)
@@ -27,50 +27,6 @@ CLOCK = pygame.time.Clock()
 FONT = pygame.freetype.Font(None, 30)
 FONT.origin = True
 
-class Student(pygame.sprite.Sprite): 
-    def __init__(self,x, y): 
-        pygame.sprite.Sprite.__init__(self)
-
-        self.image = pygame.transform.scale(pygame.image.load("images/student-images/student_picture.png"), (50, 50))
-        self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
-
-class Wraith(pygame.sprite.Sprite): 
-    def __init__(self, x, y): 
-        pygame.sprite.Sprite.__init__(self)
-        self.current_animation = "idle" # idle
-        self.frame = 0
-        self.attacking_images = self.get_images("images/undead-executioner-attack", 13)
-        self.idle_images = self.get_images("images/undead-executioner-idle", 4)
-        self.animations = {
-            "attacking": self.attacking_images, 
-            "idle": self.idle_images
-        }
-        #animation 0 
-        #animation 1
-        self.image = self.animations[self.current_animation][0]
-        self.rect =self.image.get_rect()
-        self.rect.center = (x, y)
-
-
-    def get_images(self, path, size):
-        image_list = [] 
-        for i in range(size): 
-            if i < 10: 
-                image_path = f"{path}/tile00{i}.png"
-            else: 
-                image_path = f"{path}/tile0{i}.png"
-            image = pygame.transform.scale(pygame.image.load(image_path), (150, 150))
-            image_list.append(image)
-        return image_list
-        
-    def update(self): 
-        self.image = self.animations[self.current_animation][self.frame]
-        self.frame += 1
-        if self.frame >= len(self.animations[self.current_animation]): 
-            self.frame= 0
-            self.current_animation = "idle"
-        self.rect.move_ip(1, 0)
 
 
 class Teacher(pygame.sprite.Sprite): 
@@ -110,7 +66,7 @@ class Teacher(pygame.sprite.Sprite):
 sprites = pygame.sprite.Group()
 teacher = Teacher(600, 350)
 sprites.add(teacher)
-wraith = Wraith(0, 400)
+wraith = Enemy(0, 400)
 sprites.add(wraith)
 all_texts = pygame.sprite.Group()
 df = pandas.read_csv("database\positions.csv") 
