@@ -28,36 +28,17 @@ CLOCK = pygame.time.Clock()
 FONT = pygame.freetype.Font(None, 30)
 FONT.origin = True
 
-def find_connection_nodes(current_node): 
-    with open("./database/graph.json") as file: 
-        graph = json.loads(file.read())
-    all_nodes = [node for node in graph[f"{current_node}"]]
-    df = pandas.read_csv("./database/positions.csv")
-    positions = []
-    for node in all_nodes: 
-        seat_x_y = df.loc[int(node)]
-        positions.append((seat_x_y.x, seat_x_y.y))
-    return positions
 
-def make_new_text_sprites(text_group, positions): 
-    text_group.empty()
-    for node in positions: 
-        text_group.add(Text(node[0], node[1]))
-    return text_group
+
+
 
 wraith = Enemy(0, 400)
 all_texts = pygame.sprite.Group()
 df = pandas.read_csv("database\positions.csv") 
-user_location = (random.randint(0, df.shape[0]-1))
-user_connecting_nodes = find_connection_nodes(user_location)
-x, y = df.iloc[user_location][1:3]
-user = MainCharacter(x, y)
+user = MainCharacter(17, 547, 602)
 sprites = pygame.sprite.Group()
 sprites.add(wraith)
 sprites.add(user)
-text_sprites = pygame.sprite.Group()
-text_sprites = make_new_text_sprites(text_sprites, user_connecting_nodes)
-
 # print(random.randint(df.shape[0]))
 # for x_pos, y_pos in zip(df['x'], df['y']): 
 #     text_thing = Text(x_pos, y_pos)
@@ -66,13 +47,14 @@ text_sprites = make_new_text_sprites(text_sprites, user_connecting_nodes)
 
 
 class MainGame(): 
-    def __init__(self, text_objects) -> None:
+    def __init__(self, player) -> None:
         self.clock = pygame.time.Clock()
-        self.text_objects = text_objects
+        self.text_objects = pygame.sprite.Group()
+        self.character = player
+        self.make_new_text_sprites()
         self.text_object = None
 
     def register_key(self, event):
-        counter = 0
         print(event)
         if self.text_object == None: 
             counter = 0
@@ -89,7 +71,9 @@ class MainGame():
                 self.text_object.characters_completed[self.text_object.next_key] = True
                 self.text_object.next_key += 1
                 if self.text_object.next_key == len(self.text_object.characters_completed):
-                    self.is_complete = True
+                    print("corect node = ", self.text_object.node)
+                    self.reposition_character()
+                    self.make_new_text_sprites()
             else: 
                 self.text_object.characters_reset()
                 self.text_object.next_key = 0
@@ -103,8 +87,27 @@ class MainGame():
         #         self.characters_completed[self.next_key] = False
         #         self.next_key += 1
 
-    def reset_text_objects(self): 
-        pass
+    def reposition_character(self): 
+        self.character.node = self.text_object.node
+        self.character.rect.center = self.text_object.rect.center
+        self.text_object = None
+        
+        
+    def make_new_text_sprites(self): 
+        with open("./database/graph.json") as file: 
+            graph = json.loads(file.read())
+        all_nodes = [node for node in graph[f"{self.character.node}"]]
+        df = pandas.read_csv("./database/positions.csv")
+        positions = []
+        for node in all_nodes: 
+            print(node)
+            print("character node: ", self.character.node)
+            seat_x_y = df.loc[int(node)]
+            positions.append(( seat_x_y.x, seat_x_y.y, node))
+        self.text_objects.empty()
+        for position in positions: 
+            self.text_objects.add(Text(position[0],position[1], position[2]))
+
 
     def main_loop(self, screen, game_entities): 
         while True:
@@ -128,7 +131,7 @@ class MainGame():
 summarymenu = SummaryMenu(FONT, WIDTH, HEIGHT, FPS)
 
 scene = 'menu'
-maingame = MainGame(text_sprites)
+maingame = MainGame( user)
 
 startmenu = StartMenu(FONT, FPS)
 # summarymenu = SummaryMenu()

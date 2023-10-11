@@ -11,17 +11,17 @@ URL = f"https://quotes.rest/qod.json?api_key={API_TOKEN}"
 
 class Text(pygame.sprite.Sprite): 
     """renders new text, takes user key presses, analyses data"""
-    def __init__(self, x, y) -> None:
+    def __init__(self, x, y, node) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.text= self.generate_text()
         self.rect = FONT.get_rect(self.text)
         self.metrics = FONT.get_metrics(self.text)
         self.next_key = 0
-        self.is_complete = False
         self.characters_unicode = [character for character in self.text]
         self.characters_completed = ["Na" for index in range(len(self.characters_unicode))]
         self.image = pygame.Surface(self.rect.size)
         self.image.set_colorkey((255, 0, 255))
+        self.node = node
         self.baseline = self.rect.y
         self.rect.center = (x, y)
 
