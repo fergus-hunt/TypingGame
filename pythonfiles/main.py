@@ -29,16 +29,16 @@ FONT = pygame.freetype.Font(None, 30)
 FONT.origin = True
 
 
-wraith = Enemy(0, 400)
 all_texts = pygame.sprite.Group()
 user = MainCharacter(17, 547, 602)
 sprites = pygame.sprite.Group()
-sprites.add(wraith)
 sprites.add(user)
 dataframe = pandas.read_csv("./database/positions.csv")
 with open("./database/graph.json") as file: 
     graph = json.loads(file.read())
 textgame = MainGame(user, 60, dataframe, graph)
+wraith = Enemy(100, 100, dataframe, graph)
+sprites.add(wraith)
 
 
 summarymenu = SummaryMenu(FONT, WIDTH, HEIGHT, FPS)
@@ -52,7 +52,7 @@ while True:
     if scene == 'menu': 
         scene = startmenu.main_loop(WIN)
     elif scene == "game":
-        scene = textgame.main_loop(WIN, sprites, CLASSROOM)
+        scene = textgame.main_loop(WIN, sprites, CLASSROOM, wraith)
     elif scene == "summary": 
         summarymenu.get_stats(wpm=100, errors=100)
         scene = summarymenu.main_loop(WIN)
