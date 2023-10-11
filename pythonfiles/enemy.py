@@ -58,16 +58,16 @@ class Enemy(pygame.sprite.Sprite):
             del unvisited[current_node]
 
         node = visited[str(user_node)]
-            
-        temporary_node = node
-        path = node
+        print(node)
+        temporary_node = node[1]
+        path = [node[1]]
 
         while temporary_node != self.current_node:
 
             previous_node = visited[temporary_node][1]
-            path = previous_node + path
+            path.append(previous_node)
             temporary_node = visited[temporary_node][1]
-        print(f"Path for {node} with cost {visited[node][0]}: ", end="")
+        print(f"Path for {node} with cost {visited[str(user_node)][1]}: ", end="")
         print(path)
         return visited
     
@@ -76,5 +76,5 @@ class Enemy(pygame.sprite.Sprite):
 thing = Enemy(300, 300)
 with open ("./database/graph.json") as file: 
     dict = json.loads(file.read())
-end = thing.find_user(dict, 16)
+end = thing.find_user(dict, 27)
 # pprint.pprint(end)
