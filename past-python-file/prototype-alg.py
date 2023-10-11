@@ -1,6 +1,6 @@
 import pandas, json
+import pandas, json, numpy
 df = pandas.read_csv("positions.csv")
-print(df.loc[3].x)
 
 dict = {}
 for row in df.iterrows(): 
@@ -21,12 +21,23 @@ for row in df.iterrows():
         else: 
             neighbours = [seat_number - 1, seat_number + 7, seat_number - 7]
         
+    elif seat_number >20: 
+        neighbours = [seat_number + 1, seat_number -1 , seat_number - 7]
     else: 
         neighbours = [seat_number + 1, seat_number -1, seat_number + 7, seat_number - 7]
-    dict[f"{seat_number}"] = [neighbour for neighbour in neighbours]
-    
 
+    connections = {}
+    for person in neighbours:
+         
+        tuuple = df.iloc[person]
+        print(tuuple)
+        x = tuuple.x 
+        y = tuuple.y
+        print(x, y)
+        hypot = (x*x + y*y)
+        distance = (numpy.sqrt(hypot))
+        connections[f"{tuuple.seat}"] = hypot
 
-
+    dict[f"{seat_number}"] = connections
 
 print(dict)
