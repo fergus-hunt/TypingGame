@@ -12,8 +12,6 @@ class Enemy(pygame.sprite.Sprite):
             "attacking": self.attacking_images, 
             "idle": self.idle_images
         }
-        #animation 0 
-        #animation 1
         self.image = self.animations[self.current_animation][0]
         self.rect =self.image.get_rect()
         self.rect.center = (x, y)
@@ -58,12 +56,25 @@ class Enemy(pygame.sprite.Sprite):
             
             visited[current_node] = unvisited[current_node]
             del unvisited[current_node]
+
+        node = visited[str(user_node)]
+            
+        temporary_node = node
+        path = node
+
+        while temporary_node != self.current_node:
+
+            previous_node = visited[temporary_node][1]
+            path = previous_node + path
+            temporary_node = visited[temporary_node][1]
+        print(f"Path for {node} with cost {visited[node][0]}: ", end="")
+        print(path)
         return visited
     
 
 
-# thing = Enemy(300, 300)
-# with open ("./database/graph.json") as file: 
-#     dict = json.loads(file.read())
-# end = thing.find_user(dict)
+thing = Enemy(300, 300)
+with open ("./database/graph.json") as file: 
+    dict = json.loads(file.read())
+end = thing.find_user(dict, 16)
 # pprint.pprint(end)

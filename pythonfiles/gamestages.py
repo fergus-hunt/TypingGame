@@ -1,4 +1,5 @@
-import pygame 
+import pygame, pandas, json
+from text import Text
 
 class SummaryMenu(): 
     def __init__(self, FONT, WIDTH, HEIGHT, FPS) -> None:
@@ -55,31 +56,69 @@ class StartMenu():
             pygame.display.update()
 
             
+class MainGame(): 
+    def __init__(self, player, fps, dataframe, graph) -> None:
+        self.fps = fps
+        self.df = dataframe
+        self.graph = graph
+        self.character = player
 
-# class MainGame(): 
-#     def __init__(self, FPS ) -> None:
-#         self.clock = pygame.time.Clock()
+        self.text_object = None
+        self.clock = pygame.time.Clock()
+        self.text_objects = pygame.sprite.Group()
+        self.make_new_text_sprites()
 
-#     def main_loop(self, screen, text_object, student_entities): 
-#         while True:
-#             self.clock.tick(FPS)
-#             if pygame.sprite.collide_rect(wraith, teacher):
-#                 wraith.current_animation = "attacking"
-#                 teacher.current_animation = "dying"
-#                 print(pygame.sprite.collide_rect(wraith, teacher))
-#             if text_object.is_complete: 
-#                 return 'summary'
-#             for event in pygame.event.get():
-#                 if event.type == pygame.QUIT:
-#                     pygame.quit() 
-#                 elif event.type == pygame.KEYDOWN: 
-#                     text_object.register_key(event)
+    def register_key(self, event):
+        if self.text_object == None: 
+            counter = 0
+            while counter < (len(self.text_objects.sprites())): 
+                current_object = self.text_objects.sprites()[counter]
+                if event.unicode == current_object.characters_unicode[0]: 
+                    self.text_object = current_object
+                    self.text_object.characters_completed[0] = True
+                    self.text_object.next_key += 1
+                    counter = 5
+                counter += 1
+        else: 
+            if event.unicode == self.text_object.characters_unicode[self.text_object.next_key]:
+                self.text_object.characters_completed[self.text_object.next_key] = True
+                self.text_object.next_key += 1
+                if self.text_object.next_key == len(self.text_object.characters_completed):
+                    self.reposition_character()
+                    self.make_new_text_sprites()
+            else: 
+                self.text_object.characters_reset()
+                self.text_object.next_key = 0
+                self.text_object = None
             
 
-#             text_surf = text_object.rendering_text()
-#             screen.fill("black")
-#             screen.blit(CLASSROOM, (0, 50))
-#             screen.blit(text_surf, text_object.rect)
-#             student_entities.update()
-#             student_entities.draw(screen)
-#             pygame.display.update()
+    def reposition_character(self): 
+        self.character.node = self.text_object.node
+        self.character.rect.center = self.text_object.rect.center
+        self.text_object = None
+        
+        
+    def make_new_text_sprites(self): 
+        
+        positions = [(self.df.loc[int(node)].x, self.df.loc[int(node)].y, node) for node in self.graph[f"{self.character.node}"]]
+        self.text_objects.empty()
+        for position in positions: 
+            self.text_objects.add(Text(position[0],position[1], position[2]))
+
+
+    def main_loop(self, screen, game_entities, background): 
+        while True:
+            self.clock.tick(self.fps)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit() 
+                elif event.type == pygame.KEYDOWN: 
+                    self.register_key(event)
+            
+            screen.fill('black')
+            screen.blit(background, (0, 50))
+            game_entities.update()
+            game_entities.draw(screen)
+            self.text_objects.update()
+            self.text_objects.draw(screen)
+            pygame.display.update()
