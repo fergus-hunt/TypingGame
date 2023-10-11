@@ -1,4 +1,4 @@
-import requests, lorem, pygame, time, pandas, random
+import requests, lorem, pygame, time, pandas, random, string
 import pygame.freetype
 pygame.init()
 
@@ -13,7 +13,7 @@ class Text(pygame.sprite.Sprite):
     """renders new text, takes user key presses, analyses data"""
     def __init__(self, x, y) -> None:
         pygame.sprite.Sprite.__init__(self)
-        self.text= "jdf"
+        self.text= self.generate_text()
         self.rect = FONT.get_rect(self.text)
         self.metrics = FONT.get_metrics(self.text)
         self.next_key = 0
@@ -28,6 +28,17 @@ class Text(pygame.sprite.Sprite):
 
     def update(self): 
         self.rendering_text()
+
+    def characters_reset(self): 
+        for index in range(len(self.characters_completed)):
+            self.characters_completed[index] = "Na"
+
+    def generate_text(self): 
+        text = ""
+        for i in range(2):
+            num = random.randint(0, 25) 
+            text += string.ascii_lowercase[num]
+        return text
         # def get_text(self): 
         # pd = pandas.read_csv('database\data.csv')
         # text_index = random.randint(0, len(pd)-1)
@@ -44,19 +55,19 @@ class Text(pygame.sprite.Sprite):
     #     self.rect = FONT.get_rect(self.text)
     #     self.metrics = FONT.get_metrics(self.text)
     
-    def register_key(self, event):
-        if self.next_key == len(self.characters_completed):
-            self.is_complete = True
-        else: 
-            if event.key == pygame.K_BACKSPACE: 
-                self.next_key -= 1
-                self.characters_completed[self.next_key] = "Na"
-            elif event.unicode == self.characters_unicode[self.next_key]: 
-                self.characters_completed[self.next_key] = True
-                self.next_key += 1
-            elif event.unicode != '': 
-                self.characters_completed[self.next_key] = False
-                self.next_key += 1
+    # def register_key(self, event):
+    #     if self.next_key == len(self.characters_completed):
+    #         self.is_complete = True
+    #     else: 
+    #         if event.key == pygame.K_BACKSPACE: 
+    #             self.next_key -= 1
+    #             self.characters_completed[self.next_key] = "Na"
+    #         elif event.unicode == self.characters_unicode[self.next_key]: 
+    #             self.characters_completed[self.next_key] = True
+    #             self.next_key += 1
+    #         elif event.unicode != '': 
+    #             self.characters_completed[self.next_key] = False
+    #             self.next_key += 1
         
     def rendering_text(self):
         x_val = 0
@@ -64,7 +75,6 @@ class Text(pygame.sprite.Sprite):
         #coudl make quicker here. 
         for index, metric in zip(range(len(self.characters_unicode)), self.metrics):      
             character = self.characters_unicode[index] 
-            print(character)
             if self.characters_completed[index] == "Na":
                 FONT.render_to(self.image, (x_val, self.baseline), character, 'white')
                 x_val += metric[4]
