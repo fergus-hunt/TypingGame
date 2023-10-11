@@ -1,10 +1,11 @@
-import pygame, time, lorem, pyautogui, pandas
+import pygame, time, lorem, pyautogui, pandas, random, json
 from tkinter import messagebox
 from text import Text
 import pygame.freetype
 from login import AuthenticateUser
 from gamestages import * 
 from enemy import Enemy
+from maincharacter import MainCharacter
 pygame.init()
 
 # Login = AuthenticateUser(database_manager=DatabaseManager)
@@ -27,7 +28,23 @@ CLOCK = pygame.time.Clock()
 FONT = pygame.freetype.Font(None, 30)
 FONT.origin = True
 
+def find_connection_nodes(current_node): 
+    with open("./database/graph.json") as file: 
+        graph = json.loads(file.read())
+    all_nodes = [node for node in graph[f"{current_node}"]]
+    df = pandas.read_csv("./database/positions.csv")
+    positions = []
+    print(all_nodes)
+    for node in all_nodes: 
+        seat_x_y = df.loc[int(node)]
+        positions.append((seat_x_y.x, seat_x_y.y))
+    return positions
 
+def make_new_text_sprites(text_group, positions): 
+    text_group.empty()
+    for node in positions: 
+        text_group.add(Text(node[0], node[1]))
+    return text_group
 
 class Teacher(pygame.sprite.Sprite): 
     def __init__(self, x, y): 
@@ -63,16 +80,25 @@ class Teacher(pygame.sprite.Sprite):
                 self.kill()
             self.frame= 0
 
-sprites = pygame.sprite.Group()
 teacher = Teacher(600, 350)
-sprites.add(teacher)
 wraith = Enemy(0, 400)
-sprites.add(wraith)
 all_texts = pygame.sprite.Group()
 df = pandas.read_csv("database\positions.csv") 
-for x_pos, y_pos in zip(df['x'], df['y']): 
-    text_thing = Text(x_pos, y_pos)
-    all_texts.add(text_thing)
+user_location = (random.randint(0, df.shape[0]-1))
+user_connecting_nodes = find_connection_nodes(user_location)
+x, y = df.iloc[user_location][1:3]
+user = MainCharacter(x, y)
+sprites = pygame.sprite.Group()
+sprites.add(wraith)
+sprites.add(teacher)
+sprites.add(user)
+text_sprites = pygame.sprite.Group()
+text_sprites = make_new_text_sprites(text_sprites, user_connecting_nodes)
+
+# print(random.randint(df.shape[0]))
+# for x_pos, y_pos in zip(df['x'], df['y']): 
+#     text_thing = Text(x_pos, y_pos)
+#     all_texts.add(text_thing)
 
 
 
@@ -100,8 +126,8 @@ class MainGame():
             screen.blit(CLASSROOM, (0, 50))
             student_entities.update()
             student_entities.draw(screen)
-            text_objects.update()
-            text_objects.draw(screen)
+            text_sprites.update()
+            text_sprites.draw(screen)
             pygame.display.update()
 
 summarymenu = SummaryMenu(FONT, WIDTH, HEIGHT, FPS)

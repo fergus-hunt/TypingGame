@@ -1,4 +1,4 @@
-import sqlite3 
+import sqlite3, json 
 # get uesr log in - to confirm 
 # create user accoutns 
 # store user typign runs (error count, wpm)
@@ -21,3 +21,4 @@ class DatabaseManager():
             cur = con.cursor()
             cur.execute(f"INSERT INTO user_information VALUES ('{username}', '{password}', '{email}')")
             con.commit()
+
