@@ -11,4 +11,8 @@ class MainCharacter(pygame.sprite.Sprite):
         self.rect.center = (x, y)
         self.node = node
 
+    def reposition(self, node, position): 
+        self.node = node 
+        self.rect.center = position
+
 
