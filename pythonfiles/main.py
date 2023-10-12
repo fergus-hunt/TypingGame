@@ -33,11 +33,11 @@ all_texts = pygame.sprite.Group()
 user = MainCharacter(17, 547, 602)
 sprites = pygame.sprite.Group()
 sprites.add(user)
-dataframe = pandas.read_csv("./database/positions.csv")
+# dataframe = pandas.read_csv("./database/positions.csv")
 with open("./database/graph.json") as file: 
     graph = json.loads(file.read())
-textgame = MainGame(user, 60, dataframe, graph)
-wraith = Enemy(100, 100, dataframe, graph)
+textgame = MainGame(user, 60, graph['positions'], graph['distances'])
+wraith = Enemy(100, 100, graph["positions"], graph["distances"])
 sprites.add(wraith)
 
 
