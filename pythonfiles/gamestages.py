@@ -84,7 +84,7 @@ class MainGame():
                 self.text_object.characters_completed[self.text_object.next_key] = True
                 self.text_object.next_key += 1
                 if self.text_object.next_key == len(self.text_object.characters_completed):
-                    self.reposition_character()
+                    self.reset_sprites()
                     self.make_new_text_sprites()
             else: 
                 self.text_object.characters_reset()
@@ -92,15 +92,16 @@ class MainGame():
                 self.text_object = None
             
 
-    def reposition_character(self): 
+    def reset_sprites(self): 
         self.character.node = self.text_object.node
         self.character.rect.center = self.text_object.rect.center
         self.text_object = None
         
         
     def make_new_text_sprites(self): 
-        
-        positions = [(self.df.loc[int(node)].x, self.df.loc[int(node)].y, node) for node in self.graph[f"{self.character.node}"]]
+        positions = self.df[f"{self.character.node}"]
+        print(positions)
+        positions = [(self.df[node][0], self.df[node][1], node) for node in self.graph[f"{self.character.node}"]]
         self.text_objects.empty()
         for position in positions: 
             self.text_objects.add(Text(position[0],position[1], position[2]))

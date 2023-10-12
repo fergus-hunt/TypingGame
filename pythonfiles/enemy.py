@@ -37,9 +37,8 @@ class Enemy(pygame.sprite.Sprite):
         if self.frame >= len(self.animations[self.current_animation]): 
             self.frame= 0
             self.current_animation = "idle"
-        next_coordinates = self.df.loc[int(self.next_node)]
-        print(next_coordinates)
-        self.rect.center = (next_coordinates.x, next_coordinates.y)
+        next_coordinates = self.df[self.next_node]
+        self.rect.center = (next_coordinates[0], next_coordinates[1])
         self.current_node = self.next_node
 
     def find_user(self, user_node): 
