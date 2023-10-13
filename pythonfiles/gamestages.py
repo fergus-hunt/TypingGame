@@ -57,16 +57,18 @@ class StartMenu():
 
             
 class MainGame(): 
-    def __init__(self, player, fps, dataframe, graph) -> None:
+    def __init__(self, player, fps, dataframe, graph, enemy) -> None:
         self.fps = fps
         self.df = dataframe
         self.graph = graph
         self.character = player
-
+        self.enemy = enemy
+        
         self.text_object = None
         self.clock = pygame.time.Clock()
         self.text_objects = pygame.sprite.Group()
         self.make_new_text_sprites()
+        self.character_move = pygame.USEREVENT + 1
 
     def register_key(self, event):
         if self.text_object == None: 
@@ -84,23 +86,32 @@ class MainGame():
                 self.text_object.characters_completed[self.text_object.next_key] = True
                 self.text_object.next_key += 1
                 if self.text_object.next_key == len(self.text_object.characters_completed):
-                    self.reset_sprites()
+                    self.find_denominations()
                     self.make_new_text_sprites()
+                    self.character.is_moving = True
             else: 
                 self.text_object.characters_reset()
                 self.text_object.next_key = 0
                 self.text_object = None
             
 
-    def reset_sprites(self): 
+    def find_denominations(self): 
         self.character.node = self.text_object.node
-        self.character.rect.center = self.text_object.rect.center
-        self.text_object = None
+        print(self.character.rect.center)
+        next_character_position = self.df[f"{self.character.node}"]
+        print(next_character_position)
+        x_denoms = (next_character_position[0] - self.character.rect.x)/6
+        y_denoms = (next_character_position[1] - self.character.rect.y)/6
+        for i in range(0, 7): 
+            next_pos = (i * x_denoms + self.character.rect.x, i * y_denoms + self.character.rect.y)
+            self.character.next_positions.append(next_pos)
+
+
         
         
     def make_new_text_sprites(self): 
+        self.text_object = None
         positions = self.df[f"{self.character.node}"]
-        print(positions)
         positions = [(self.df[node][0], self.df[node][1], node) for node in self.graph[f"{self.character.node}"]]
         self.text_objects.empty()
         for position in positions: 
@@ -108,11 +119,16 @@ class MainGame():
 
 
     def main_loop(self, screen, game_entities, background, enemy): 
+
+        pygame.time.set_timer(self.character_move, 2000)
         while True:
             self.clock.tick(self.fps)
             for event in pygame.event.get():
+                if event.type == self.character_move: 
+                    self.character.update()
                 if event.type == pygame.QUIT:
                     pygame.quit() 
+
                 elif event.type == pygame.KEYDOWN: 
                     self.register_key(event)
             
