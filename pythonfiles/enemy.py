@@ -63,7 +63,6 @@ class Enemy(pygame.sprite.Sprite):
             del unvisited[current_node]
 
         node = visited[str(user_node)]
-        print(node)
         temporary_node = node[1]
         path = [node[1]]
 
