@@ -36,10 +36,9 @@ sprites.add(user)
 # dataframe = pandas.read_csv("./database/positions.csv")
 with open("./database/graph.json") as file: 
     graph = json.loads(file.read())
-textgame = MainGame(user, 60, graph['positions'], graph['distances'])
 wraith = Enemy(100, 100, graph["positions"], graph["distances"])
 sprites.add(wraith)
-
+textgame = MainGame(user, 60, graph['positions'], graph['distances'], wraith)
 
 summarymenu = SummaryMenu(FONT, WIDTH, HEIGHT, FPS)
 
