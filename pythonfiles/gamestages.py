@@ -1,4 +1,4 @@
-import pygame, pandas, json
+import pygame, pandas, json, time
 from text import Text
 
 class SummaryMenu(): 
@@ -97,9 +97,11 @@ class MainGame():
 
     def find_denominations(self): 
         self.character.node = self.text_object.node
-        print(self.character.rect.center)
+        print(f"Text position: {self.text_object.rect.center}")
+        print("Character position: " + str(self.character.rect.center))
         next_character_position = self.df[f"{self.character.node}"]
-        print(next_character_position)
+        print(f"Next character position: {next_character_position}")
+        time.sleep(10)
         x_denoms = (next_character_position[0] - self.character.rect.x)/6
         y_denoms = (next_character_position[1] - self.character.rect.y)/6
         for i in range(0, 7): 
