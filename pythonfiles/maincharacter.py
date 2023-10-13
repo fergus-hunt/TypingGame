@@ -4,8 +4,9 @@ from text import Text
 
 pygame.init()
 class MainCharacter(pygame.sprite.Sprite): 
-    def __init__(self,node, x, y): 
+    def __init__(self,node, x, y, event): 
         pygame.sprite.Sprite.__init__(self)
+        self.STOP_MOVING = event
         self.image = pygame.transform.scale(pygame.image.load("./images/student-images/Pink_Monster.png"), (100, 100))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
@@ -13,14 +14,15 @@ class MainCharacter(pygame.sprite.Sprite):
         self.is_moving = False
         self.next_positions = []  # implementing a stack
 
-    def reposition(self, node, position): 
-        self.node = node 
-        self.rect.center = position
+    # def reposition(self, node, position): 
+    #     self.node = node 
+    #     self.rect.center = position
 
-    def update(self): 
+    def update(self):
         if self.is_moving: 
             if len(self.next_positions) == 0: 
                 self.is_moving = False
+                pygame.event.post(pygame.event.Event(self.STOP_MOVING))
             else: 
                 self.rect.center = self.next_positions[0]
                 del self.next_positions[0]

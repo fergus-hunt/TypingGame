@@ -1,4 +1,4 @@
-import pygame, pandas, json, time
+import pygame, pandas, json, numpy
 from text import Text
 
 class SummaryMenu(): 
@@ -57,7 +57,9 @@ class StartMenu():
 
             
 class MainGame(): 
-    def __init__(self, player, fps, dataframe, graph, enemy) -> None:
+    def __init__(self, player, fps, dataframe, graph, enemy, character_moving, next_animation) -> None:
+        self.STOP_MOVING = character_moving
+        self.NEXT_ANIMATION = next_animation
         self.fps = fps
         self.df = dataframe
         self.graph = graph
@@ -68,7 +70,6 @@ class MainGame():
         self.clock = pygame.time.Clock()
         self.text_objects = pygame.sprite.Group()
         self.make_new_text_sprites()
-        self.character_move = pygame.USEREVENT + 1
 
     def register_key(self, event):
         if self.text_object == None: 
@@ -87,7 +88,6 @@ class MainGame():
                 self.text_object.next_key += 1
                 if self.text_object.next_key == len(self.text_object.characters_completed):
                     self.find_denominations()
-                    self.make_new_text_sprites()
                     self.character.is_moving = True
             else: 
                 self.text_object.characters_reset()
@@ -96,18 +96,19 @@ class MainGame():
             
 
     def find_denominations(self): 
-        self.character.node = self.text_object.node
-        print(f"Text position: {self.text_object.rect.center}")
-        print("Character position: " + str(self.character.rect.center))
-        next_character_position = self.df[f"{self.character.node}"]
-        print(f"Next character position: {next_character_position}")
-        time.sleep(10)
-        x_denoms = (next_character_position[0] - self.character.rect.x)/6
-        y_denoms = (next_character_position[1] - self.character.rect.y)/6
-        for i in range(0, 7): 
-            next_pos = (i * x_denoms + self.character.rect.x, i * y_denoms + self.character.rect.y)
-            self.character.next_positions.append(next_pos)
+        current_position = self.df[f"{self.character.node}"]
+        print("currnet position: ", current_position)
 
+        self.character.node = self.text_object.node
+        next_character_position = self.df[f"{self.character.node}"]
+        print("Next position: ", next_character_position)
+        
+        x_denoms = (next_character_position[0] - current_position[0])/6
+        y_denoms = (next_character_position[1] - current_position[1])/6
+        print(f"X_DENOMNS: {x_denoms}\nY_DENOMS {y_denoms}")
+        for i in range(0, 7): 
+            next_pos = ((i * x_denoms) + current_position[0], (i * y_denoms) + current_position[1])
+            self.character.next_positions.append(next_pos)
 
         
         
@@ -120,24 +121,28 @@ class MainGame():
             self.text_objects.add(Text(position[0],position[1], position[2]))
 
 
-    def main_loop(self, screen, game_entities, background, enemy): 
+    def main_loop(self, screen, game_entities, background): 
 
-        pygame.time.set_timer(self.character_move, 2000)
+        pygame.time.set_timer(self.NEXT_ANIMATION, 200)
         while True:
             self.clock.tick(self.fps)
             for event in pygame.event.get():
-                if event.type == self.character_move: 
-                    self.character.update()
                 if event.type == pygame.QUIT:
                     pygame.quit() 
-
                 elif event.type == pygame.KEYDOWN: 
                     self.register_key(event)
-            
+
+
+                if event.type == self.NEXT_ANIMATION: 
+                    game_entities.update()
+
+                if event.type == self.STOP_MOVING: 
+                    self.make_new_text_sprites()
+
+
             screen.fill('black')
             screen.blit(background, (0, 50))
-            enemy.find_user(self.character.node)
-            game_entities.update()
+            self.enemy.find_user(self.character.node)
             game_entities.draw(screen)
             self.text_objects.update()
             self.text_objects.draw(screen)
