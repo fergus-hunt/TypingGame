@@ -59,8 +59,8 @@ class Enemy(pygame.sprite.Sprite):
         next = nodes[-2]
         current_position = self.df[f"{current}"]
         next_position = self.df[f"{next}"]
-        x_denoms = (next_position[0] - current_position[0])/12
-        y_denoms = (next_position[1] - current_position[1])/12
+        x_denoms = (next_position[0] - current_position[0])/18
+        y_denoms = (next_position[1] - current_position[1])/18
         for i in range(1, 13): 
             next_pos = ((i * x_denoms) + current_position[0], (i * y_denoms) + current_position[1])
             self.next_positions.append(next_pos)
@@ -96,6 +96,7 @@ class Enemy(pygame.sprite.Sprite):
             previous_node = visited[temporary_node][1]
             path.append(previous_node)
             temporary_node = visited[temporary_node][1]
+
         self.path = path
 
         self.find_denominations(path)
