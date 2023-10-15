@@ -60,6 +60,6 @@ while True:
         scene = summarymenu.main_loop(WIN)
 
 
-# threading for event process and mainloop? 
-# pickle in python
+# organise code so character repositions itself, 
+# make the enemy dijkstras algorithm work 
 
