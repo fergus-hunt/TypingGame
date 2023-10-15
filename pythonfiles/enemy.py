@@ -59,8 +59,8 @@ class Enemy(pygame.sprite.Sprite):
             next = self.path[index-1]
             current_position = self.df[f"{current}"]
             next_position = self.df[f"{next}"]
-            x_denoms = (next_position[0] - current_position[0])/12
-            y_denoms = (next_position[1] - current_position[1])/12
+            x_denoms = (next_position[0] - current_position[0])/18
+            y_denoms = (next_position[1] - current_position[1])/18
             temp_list = []
             for i in range(1, 13): 
                 next_pos = ((i * x_denoms) + current_position[0], (i * y_denoms) + current_position[1])
@@ -73,8 +73,12 @@ class Enemy(pygame.sprite.Sprite):
         for node in self.graph.keys(): 
             unvisited[node] = [sys.maxsize, None]
 
-        unvisited[f"{self.current_node}"] = [0, None]
-        
+        if len(self.next_positions[f"{self.current_node}"]) != 0: 
+            next_node = self.path[-2]
+            unvisited[f"{next_node}"] = [0, None]
+        else: 
+            unvisited[f"{self.current_node}"] = [0, None]
+
         while len(unvisited) > 0: 
             
             current_node = f"{min(unvisited, key=unvisited.get)}"
@@ -97,5 +101,6 @@ class Enemy(pygame.sprite.Sprite):
             previous_node = visited[temporary_node][1]
             path.append(previous_node)
             temporary_node = visited[temporary_node][1]
+
         self.path = path
         self.find_denominations()
