@@ -65,7 +65,6 @@ class MainGame():
         self.graph = graph
         self.character = player
         self.enemy = enemy
-        self.enemy.find_user(self.character.node)
         
         self.text_object = None
         self.clock = pygame.time.Clock()
@@ -125,7 +124,7 @@ class MainGame():
     def main_loop(self, screen, game_entities, background): 
 
         pygame.time.set_timer(self.NEXT_ANIMATION, 200)
-        self.enemy.find_user(self.character.node)
+        self.enemy.find_user()
         while True:
             self.clock.tick(self.fps)
             for event in pygame.event.get():
@@ -139,8 +138,9 @@ class MainGame():
                     game_entities.update()
 
                 if event.type == self.STOP_MOVING: 
+                    self.enemy.user_node = self.character.node
+                    # self.enemy.find_user(self.character.node)
                     self.make_new_text_sprites()
-                    self.enemy.find_user(self.character.node)
 
 
             screen.fill('black')

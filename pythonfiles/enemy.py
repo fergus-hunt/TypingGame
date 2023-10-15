@@ -8,6 +8,7 @@ class Enemy(pygame.sprite.Sprite):
         self.graph = graph
         self.df = positions
         self.current_node = "0"
+        self.user_node = "17"
         self.attacking_images = self.get_images("images/undead-executioner-attack", 13)
         self.idle_images = self.get_images("images/undead-executioner-idle", 4)
         self.animations = {
@@ -17,7 +18,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image = self.animations[self.current_animation][0]
         self.rect =self.image.get_rect()
         self.rect.center = (self.df[f"{self.current_node}"])
-        self.next_positions = {"0":[]}
+        self.next_positions = []
         self.path = []
 
 
@@ -38,42 +39,40 @@ class Enemy(pygame.sprite.Sprite):
         # if self.frame >= len(self.animations[self.current_animation]): 
         #     self.frame= 0
         #     self.current_animation = "idle"
-        if len(self.path) > 1 and len(self.next_positions) > 1: 
                 
-            if len(self.next_positions[(self.current_node)]) == 0: 
-                del self.path[-1]
-                del self.next_positions[str(self.current_node)]
-                self.current_node = self.path[-1]
+        if len(self.next_positions) == 0: 
+            self.find_user()
+            del self.path[-1]
+            self.current_node = self.path[-1]
 
-            self.rect.center = self.next_positions[self.current_node][0]
-            del self.next_positions[self.current_node][0]
+        self.rect.center = self.next_positions[0]
+        del self.next_positions[0]
         # print(f"PATH: {self.path}")
         # print(f"POSITIONS: {self.next_positions}")
         # next_coordinates = self.df[self.next_node]
         # self.rect.center = (next_coordinates[0], next_coordinates[1])
         # self.current_node = self.next_node
 
-    def find_denominations(self): 
-        for index in range(len(self.path)-1, 0, -1): 
-            current = self.path[index]
-            next = self.path[index-1]
-            current_position = self.df[f"{current}"]
-            next_position = self.df[f"{next}"]
-            x_denoms = (next_position[0] - current_position[0])/12
-            y_denoms = (next_position[1] - current_position[1])/12
-            temp_list = []
-            for i in range(1, 13): 
-                next_pos = ((i * x_denoms) + current_position[0], (i * y_denoms) + current_position[1])
-                temp_list.append(next_pos)
-                self.next_positions.setdefault(f"{current}", temp_list)
+    def find_denominations(self, nodes): 
+        # for index in range(len(self.path)-1, 0, -1): 
+        current = nodes[-1]
+        next = nodes[-2]
+        current_position = self.df[f"{current}"]
+        next_position = self.df[f"{next}"]
+        x_denoms = (next_position[0] - current_position[0])/12
+        y_denoms = (next_position[1] - current_position[1])/12
+        for i in range(1, 13): 
+            next_pos = ((i * x_denoms) + current_position[0], (i * y_denoms) + current_position[1])
+            self.next_positions.append(next_pos)
 
-    def find_user(self, user_node):
+    def find_user(self):
         visited = {}
         unvisited = {}
         for node in self.graph.keys(): 
             unvisited[node] = [sys.maxsize, None]
 
         unvisited[f"{self.current_node}"] = [0, None]
+        self.path_position = 0
         
         while len(unvisited) > 0: 
             
@@ -88,9 +87,9 @@ class Enemy(pygame.sprite.Sprite):
             visited[current_node] = unvisited[current_node]
             del unvisited[current_node]
 
-        node = visited[str(user_node)]
+        node = visited[str(self.user_node)]
         temporary_node = node[1]
-        path = [node[1]]
+        path = [self.user_node, node[1]]
             
         while temporary_node != self.current_node:
 
@@ -98,4 +97,5 @@ class Enemy(pygame.sprite.Sprite):
             path.append(previous_node)
             temporary_node = visited[temporary_node][1]
         self.path = path
-        self.find_denominations()
+
+        self.find_denominations(path)
