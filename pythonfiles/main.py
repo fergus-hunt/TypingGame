@@ -60,6 +60,3 @@ while True:
         scene = summarymenu.main_loop(WIN)
 
 
-# organise code so character repositions itself, 
-# make the enemy dijkstras algorithm work 
-
