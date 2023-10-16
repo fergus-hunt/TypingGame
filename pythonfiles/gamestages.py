@@ -57,12 +57,11 @@ class StartMenu():
 
             
 class MainGame(): 
-    def __init__(self, player, fps, dataframe, graph, enemy, character_moving, next_animation) -> None:
+    def __init__(self, player, fps, graph, enemy, character_moving, next_animation) -> None:
         self.STOP_MOVING = character_moving
         self.NEXT_ANIMATION = next_animation
         self.fps = fps
-        self.df = dataframe
-        self.graph = graph
+        self.df = graph
         self.character = player
         self.enemy = enemy
         
@@ -87,35 +86,17 @@ class MainGame():
                 self.text_object.characters_completed[self.text_object.next_key] = True
                 self.text_object.next_key += 1
                 if self.text_object.next_key == len(self.text_object.characters_completed):
-                    self.find_denominations()
+                    self.character.movement_steps(self.text_object.node)
                     self.character.is_moving = True
             else: 
                 self.text_object.characters_reset()
                 self.text_object.next_key = 0
                 self.text_object = None
             
-
-    def find_denominations(self): 
-        current_position = self.df[f"{self.character.node}"]
-        print("currnet position: ", current_position)
-
-        self.character.node = self.text_object.node
-        next_character_position = self.df[f"{self.character.node}"]
-        print("Next position: ", next_character_position)
-        
-        x_denoms = (next_character_position[0] - current_position[0])/6
-        y_denoms = (next_character_position[1] - current_position[1])/6
-        print(f"X_DENOMNS: {x_denoms}\nY_DENOMS {y_denoms}")
-        for i in range(0, 7): 
-            next_pos = ((i * x_denoms) + current_position[0], (i * y_denoms) + current_position[1])
-            self.character.next_positions.append(next_pos)
-
-        
-        
     def make_new_text_sprites(self): 
         self.text_object = None
-        positions = self.df[f"{self.character.node}"]
-        positions = [(self.df[node][0], self.df[node][1], node) for node in self.graph[f"{self.character.node}"]]
+        positions = self.df['positions'][f"{self.character.node}"]
+        positions = [(self.df['positions'][node][0], self.df['positions'][node][1], node) for node in self.df['distances'][f"{self.character.node}"]]
         self.text_objects.empty()
         for position in positions: 
             self.text_objects.add(Text(position[0],position[1], position[2]))
@@ -124,7 +105,7 @@ class MainGame():
     def main_loop(self, screen, game_entities, background): 
 
         pygame.time.set_timer(self.NEXT_ANIMATION, 200)
-        self.enemy.find_user()
+        self.enemy.find_user_path()
         while True:
             self.clock.tick(self.fps)
             for event in pygame.event.get():
@@ -136,10 +117,11 @@ class MainGame():
 
                 if event.type == self.NEXT_ANIMATION: 
                     game_entities.update()
+                    if self.enemy.user_found: 
+                        pygame.quit()
 
                 if event.type == self.STOP_MOVING: 
                     self.enemy.user_node = self.character.node
-                    # self.enemy.find_user(self.character.node)
                     self.make_new_text_sprites()
 
 
