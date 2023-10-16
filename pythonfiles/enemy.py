@@ -1,13 +1,13 @@
 import pygame, sys, json, pprint
 
 class Enemy(pygame.sprite.Sprite): 
-    def __init__(self, x, y, positions, graph): 
+    def __init__(self, x, y, graph): 
         pygame.sprite.Sprite.__init__(self)
-        self.current_animation = "idle" # idle
+        self.current_animation = "idle" # animation status
         self.frame = 0
-        self.graph = graph
-        self.df = positions
+        self.df = graph
         self.current_node = "0"
+        self.user_found = False
         self.user_node = "17"
         self.attacking_images = self.get_images("images/undead-executioner-attack", 13)
         self.idle_images = self.get_images("images/undead-executioner-idle", 4)
@@ -17,7 +17,7 @@ class Enemy(pygame.sprite.Sprite):
         }
         self.image = self.animations[self.current_animation][0]
         self.rect =self.image.get_rect()
-        self.rect.center = (self.df[f"{self.current_node}"])
+        self.rect.center = (self.df['positions'][f"{self.current_node}"])
         self.next_positions = []
         self.path = []
 
@@ -39,36 +39,32 @@ class Enemy(pygame.sprite.Sprite):
         # if self.frame >= len(self.animations[self.current_animation]): 
         #     self.frame= 0
         #     self.current_animation = "idle"
-                
-        if len(self.next_positions) == 0: 
-            self.find_user()
-            del self.path[-1]
-            self.current_node = self.path[-1]
+        if not self.user_found: 
+            if len(self.next_positions) == 0: 
+                del self.path[-1]
+                self.current_node = self.path[-1] # current enemy node
+                self.find_user_path()
+            if self.current_node != self.user_node:
+                self.rect.center = self.next_positions[0] # moving the enemy foward 
+                del self.next_positions[0]
+            else: 
+                self.user_found = True # seeing whether user has been caught
 
-        self.rect.center = self.next_positions[0]
-        del self.next_positions[0]
-        # print(f"PATH: {self.path}")
-        # print(f"POSITIONS: {self.next_positions}")
-        # next_coordinates = self.df[self.next_node]
-        # self.rect.center = (next_coordinates[0], next_coordinates[1])
-        # self.current_node = self.next_node
-
-    def find_denominations(self, nodes): 
-        # for index in range(len(self.path)-1, 0, -1): 
-        current = nodes[-1]
+    def calculate_enemy_movement(self, nodes, speed): # splits up the movement from current node to next node
+        current = self.current_node 
         next = nodes[-2]
-        current_position = self.df[f"{current}"]
-        next_position = self.df[f"{next}"]
-        x_denoms = (next_position[0] - current_position[0])/18
-        y_denoms = (next_position[1] - current_position[1])/18
-        for i in range(1, 13): 
+        current_position = self.df['positions'][f"{current}"]
+        next_position = self.df['positions'][f"{next}"]
+        x_denoms = (next_position[0] - current_position[0])/speed
+        y_denoms = (next_position[1] - current_position[1])/speed
+        for i in range(1, speed+1): 
             next_pos = ((i * x_denoms) + current_position[0], (i * y_denoms) + current_position[1])
             self.next_positions.append(next_pos)
 
-    def find_user(self):
+    def find_user_path(self): # find the best path 
         visited = {}
         unvisited = {}
-        for node in self.graph.keys(): 
+        for node in self.df['distances'].keys(): 
             unvisited[node] = [sys.maxsize, None]
 
         unvisited[f"{self.current_node}"] = [0, None]
@@ -77,7 +73,7 @@ class Enemy(pygame.sprite.Sprite):
         while len(unvisited) > 0: 
             
             current_node = f"{min(unvisited, key=unvisited.get)}"
-            neighbours = self.graph[f"{current_node}"]
+            neighbours = self.df['distances'][f"{current_node}"]
             for node in neighbours: 
                 if node in unvisited.keys(): 
                     cost = unvisited[current_node][0] + neighbours[node]
@@ -89,14 +85,14 @@ class Enemy(pygame.sprite.Sprite):
 
         node = visited[str(self.user_node)]
         temporary_node = node[1]
+        # print(f"NODE: {node}\nLIST: {visited}")
+        # print(f"TEMPORARY NODE: {temporary_node}")
+        # print("MY NODE: ", self.current_node)
         path = [self.user_node, node[1]]
-            
         while temporary_node != self.current_node:
 
             previous_node = visited[temporary_node][1]
             path.append(previous_node)
             temporary_node = visited[temporary_node][1]
-
         self.path = path
-
-        self.find_denominations(path)
+        self.calculate_enemy_movement(path, 16)

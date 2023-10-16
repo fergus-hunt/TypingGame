@@ -33,15 +33,15 @@ FONT.origin = True
 
 
 all_texts = pygame.sprite.Group()
-user = MainCharacter(17, 547, 602, STOPPED_MOVING)
 sprites = pygame.sprite.Group()
-sprites.add(user)
 # dataframe = pandas.read_csv("./database/positions.csv")
 with open("./database/graph.json") as file: 
     graph = json.loads(file.read())
-wraith = Enemy(100, 100, graph["positions"], graph["distances"])
+user = MainCharacter(17, 547, 602, STOPPED_MOVING, graph)
+sprites.add(user)
+wraith = Enemy(100, 100, graph)
 sprites.add(wraith)
-textgame = MainGame(user, 60, graph['positions'], graph['distances'], wraith, STOPPED_MOVING, NEXT_ANIMATION)
+textgame = MainGame(user, 60, graph, wraith, STOPPED_MOVING, NEXT_ANIMATION)
 
 summarymenu = SummaryMenu(FONT, WIDTH, HEIGHT, FPS)
 
