@@ -7,6 +7,7 @@ class MainCharacter(pygame.sprite.Sprite):
     def __init__(self,node, x, y, event, dataframe): 
         pygame.sprite.Sprite.__init__(self)
         self.STOP_MOVING = event
+        self.score = 0
         self.df = dataframe
         self.image = pygame.transform.scale(pygame.image.load("./images/student-images/Pink_Monster.png"), (100, 100))
         self.rect = self.image.get_rect()
