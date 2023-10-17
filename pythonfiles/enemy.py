@@ -1,8 +1,9 @@
 import pygame, sys, json, pprint
 
 class Enemy(pygame.sprite.Sprite): 
-    def __init__(self, x, y, graph): 
+    def __init__(self, x, y, graph, game_over_event): 
         pygame.sprite.Sprite.__init__(self)
+        self.GAME_OVER = game_over_event
         self.current_animation = "idle" # animation status
         self.frame = 0
         self.df = graph
@@ -49,6 +50,7 @@ class Enemy(pygame.sprite.Sprite):
                 del self.next_positions[0]
             else: 
                 self.user_found = True # seeing whether user has been caught
+                pygame.event.post(pygame.event.Event(self.GAME_OVER, myevent="bastard"))
 
     def calculate_enemy_movement(self, nodes, speed): # splits up the movement from current node to next node
         current = self.current_node 
@@ -88,11 +90,13 @@ class Enemy(pygame.sprite.Sprite):
         # print(f"NODE: {node}\nLIST: {visited}")
         # print(f"TEMPORARY NODE: {temporary_node}")
         # print("MY NODE: ", self.current_node)
+
         path = [self.user_node, node[1]]
-        while temporary_node != self.current_node:
+        while temporary_node != self.current_node and self.current_node != self.user_node:
 
             previous_node = visited[temporary_node][1]
             path.append(previous_node)
             temporary_node = visited[temporary_node][1]
+
         self.path = path
         self.calculate_enemy_movement(path, 16)

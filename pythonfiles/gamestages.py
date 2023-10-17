@@ -57,10 +57,11 @@ class StartMenu():
 
             
 class MainGame(): 
-    def __init__(self, player, fps, graph, enemy, character_moving, next_animation) -> None:
+    def __init__(self, player, graph, enemy, character_moving, next_animation, game_over) -> None:
         self.STOP_MOVING = character_moving
         self.NEXT_ANIMATION = next_animation
-        self.fps = fps
+        self.GAME_OVER = game_over
+        self.fps = 60
         self.df = graph
         self.character = player
         self.enemy = enemy
@@ -114,11 +115,13 @@ class MainGame():
                 elif event.type == pygame.KEYDOWN: 
                     self.register_key(event)
 
-
+                if event.type == self.GAME_OVER: 
+                    print(event)
+                    return "menu"
                 if event.type == self.NEXT_ANIMATION: 
                     game_entities.update()
-                    if self.enemy.user_found: 
-                        pygame.quit()
+                    # if self.enemy.user_found: 
+                    #     pygame.quit()
 
                 if event.type == self.STOP_MOVING: 
                     self.enemy.user_node = self.character.node
