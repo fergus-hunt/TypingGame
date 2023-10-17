@@ -11,7 +11,6 @@ pygame.init()
 # Login = AuthenticateUser(database_manager=DatabaseManager)
 # Login.log_in_user()
 # Login.root.mainloop()
-
 # USERNAME = Login.username
 
 pygame.init()
@@ -33,7 +32,7 @@ FONT.origin = True
 
 all_texts = pygame.sprite.Group()
 sprites = pygame.sprite.Group()
-# dataframe = pandas.read_csv("./database/positions.csv")
+
 with open("./database/graph.json") as file: 
     graph = json.loads(file.read())
 user = MainCharacter(17, 547, 602, STOPPED_MOVING, graph)
@@ -48,7 +47,6 @@ scene = 'menu'
 
 startmenu = StartMenu(FONT, FPS)
 
-
 while True: 
     if scene == 'menu': 
         scene = startmenu.main_loop(WIN)
@@ -57,5 +55,3 @@ while True:
     elif scene == "summary": 
         summarymenu.get_stats(wpm=100, errors=100)
         scene = summarymenu.main_loop(WIN)
-
-
