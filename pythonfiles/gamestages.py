@@ -57,14 +57,17 @@ class StartMenu():
 
             
 class MainGame(): 
-    def __init__(self, player, graph, enemy, character_moving, next_animation, game_over) -> None:
+    def __init__(self, player, enemy, scoreboard,  graph,  character_moving, next_animation, game_over) -> None:
         self.STOP_MOVING = character_moving
         self.NEXT_ANIMATION = next_animation
         self.GAME_OVER = game_over
         self.fps = 60
         self.df = graph
+
+        self.scoreboard = scoreboard
         self.character = player
         self.enemy = enemy
+
         
         self.text_object = None
         self.clock = pygame.time.Clock()
@@ -116,16 +119,18 @@ class MainGame():
                     self.register_key(event)
 
                 if event.type == self.GAME_OVER: 
-                    print(event)
                     return "menu"
+
+                if event.type == self.STOP_MOVING: 
+                    self.enemy.user_node = self.character.node
+                    self.make_new_text_sprites()
+                    self.scoreboard.update_score()
                 if event.type == self.NEXT_ANIMATION: 
                     game_entities.update()
                     # if self.enemy.user_found: 
                     #     pygame.quit()
 
-                if event.type == self.STOP_MOVING: 
-                    self.enemy.user_node = self.character.node
-                    self.make_new_text_sprites()
+
 
 
             screen.fill('black')

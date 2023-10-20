@@ -2,7 +2,7 @@ import requests, lorem, pygame, time, pandas, random, string
 import pygame.freetype
 pygame.init()
 
-FONT = pygame.freetype.Font(None, 35)
+FONT = pygame.freetype.Font(None, 50)
 FONT.origin = True 
 
 API_TOKEN = "TfYf279t3YTCMftnoaNsg23Zbi13H5xblBHvu4yw"

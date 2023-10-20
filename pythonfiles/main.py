@@ -6,6 +6,7 @@ from login import AuthenticateUser
 from gamestages import * 
 from enemy import Enemy
 from maincharacter import MainCharacter
+from scoreboard import ScoreBoard
 pygame.init()
 
 # Login = AuthenticateUser(database_manager=DatabaseManager)
@@ -15,13 +16,13 @@ pygame.init()
 
 pygame.init()
 FPS = 20
-HEIGHT = 800
-WIDTH = 1100
+HEIGHT = 965
+WIDTH = 1285
 
 STOPPED_MOVING = (pygame.USEREVENT + 1)
 NEXT_ANIMATION = (pygame.USEREVENT + 2)
 GAME_OVER = (pygame.USEREVENT + 3)
-CLASSROOM=pygame.transform.scale(pygame.image.load("C:/Users/fungu/Desktop/Typinggame/images/classroom.png"), (WIDTH, HEIGHT -50 ))
+CLASSROOM=pygame.image.load("images\classroom4.png")
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 CLOCK = pygame.time.Clock() 
@@ -30,16 +31,18 @@ FONT = pygame.freetype.Font(None, 30)
 FONT.origin = True
 
 
-all_texts = pygame.sprite.Group()
+# all_texts = pygame.sprite.Group()
 sprites = pygame.sprite.Group()
 
 with open("./database/graph.json") as file: 
     graph = json.loads(file.read())
 user = MainCharacter(17, 547, 602, STOPPED_MOVING, graph)
 sprites.add(user)
+user_score = ScoreBoard(WIDTH/2, 0)
+sprites.add(user_score)
 wraith = Enemy(100, 100, graph, GAME_OVER)
 sprites.add(wraith)
-textgame = MainGame(user, graph, wraith, STOPPED_MOVING, NEXT_ANIMATION, GAME_OVER)
+textgame= MainGame(user, wraith, user_score, graph,  STOPPED_MOVING, NEXT_ANIMATION, GAME_OVER)
 
 summarymenu = SummaryMenu(FONT, WIDTH, HEIGHT, FPS)
 
