@@ -7,6 +7,7 @@ from gamestages import *
 from enemy import Enemy
 from maincharacter import MainCharacter
 from scoreboard import ScoreBoard
+from alerts import Alert
 pygame.init()
 
 # Login = AuthenticateUser(database_manager=DatabaseManager)
@@ -36,24 +37,26 @@ sprites = pygame.sprite.Group()
 
 with open("./database/graph.json") as file: 
     graph = json.loads(file.read())
-user = MainCharacter(17, 547, 602, STOPPED_MOVING, graph)
+user = MainCharacter(STOPPED_MOVING, graph)
 sprites.add(user)
 user_score = ScoreBoard(WIDTH/2, 0)
 sprites.add(user_score)
-wraith = Enemy(100, 100, graph, GAME_OVER)
+wraith = Enemy(graph, GAME_OVER)
 sprites.add(wraith)
-textgame= MainGame(user, wraith, user_score, graph,  STOPPED_MOVING, NEXT_ANIMATION, GAME_OVER)
+game_alert = Alert()
+sprites.add(game_alert)
+textgame= MainGame(user, wraith, user_score, game_alert,  graph,  STOPPED_MOVING, NEXT_ANIMATION, GAME_OVER)
 
 summarymenu = SummaryMenu(FONT, WIDTH, HEIGHT, FPS)
 
-scene = 'menu'
+scene = 'game'
 
 startmenu = StartMenu(FONT, FPS)
 
 while True: 
-    if scene == 'menu': 
-        scene = startmenu.main_loop(WIN)
-    elif scene == "game":
+    # if scene == 'menu': 
+    #     scene = startmenu.main_loop(WIN)
+    if scene == "game":
         scene = textgame.main_loop(WIN, sprites, CLASSROOM)
     elif scene == "summary": 
         summarymenu.get_stats(wpm=100, errors=100)
