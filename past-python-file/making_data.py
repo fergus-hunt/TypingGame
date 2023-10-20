@@ -3,10 +3,8 @@ import pygame
 
 
 
-def get_distances(): 
-    with open("positions.json", "r") as file: 
-        df = json.loads(file.read())
-    print(df)
+def get_distances(positions): 
+    df = positions
     dict = {}
     for row in df.keys(): 
         seat_number = int(row)
@@ -28,23 +26,28 @@ def get_distances():
             
         elif seat_number >20: 
             neighbours = [seat_number + 1, seat_number -1 , seat_number - 7]
+        elif seat_number < 7: 
+            neighbours = [seat_number + 1, seat_number -1, seat_number + 7]
         else: 
             neighbours = [seat_number + 1, seat_number -1, seat_number + 7, seat_number - 7]
-
+        print("Neightbours: ", neighbours)
         connections = {}
         for person in neighbours:
             
-            tuuple = df[str(person)]
+            tuuple = df[(person)]
             print(tuuple)
-            x = tuuple[0]
-            y = tuuple[1]
+            x = tuuple[0] - df[row][0]
+            y = tuuple[1] - df[row][1]
             print(x, y)
             hypot = (x*x + y*y)
             distance = (numpy.sqrt(hypot))
-            connections[f"{seat_number}"] = hypot
+            connections[person] = distance
 
         dict[f"{seat_number}"] = connections
-        print(dict)
+    json_whole = {"positions": positions, "distances": dict}
+    json_hwat = json.dumps(json_whole)
+    with open("graph.json", "w") as file: 
+        file.write(json_hwat)
 
 FPS = 60
 HEIGHT = 965
@@ -67,10 +70,10 @@ while True:
             file = pandas.DataFrame((all_positions))
             jsonstuff = json.dumps(all_positions)
             print(jsonstuff)
-            with open("positions.json", "w") as newfile: 
-                newfile.write(jsonstuff)
+            # with open("positions.json", "w") as newfile: 
+            #     newfile.write(jsonstuff)
             # time.sleep(5)
-            get_distances()
+            get_distances(all_positions)
             pygame.quit() 
     
         if event.type == pygame.MOUSEBUTTONDOWN: 

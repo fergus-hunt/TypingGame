@@ -4,15 +4,15 @@ from text import Text
 
 pygame.init()
 class MainCharacter(pygame.sprite.Sprite): 
-    def __init__(self,node, x, y, event, dataframe): 
+    def __init__(self,event, dataframe): 
         pygame.sprite.Sprite.__init__(self)
         self.STOP_MOVING = event
         self.score = 0
         self.df = dataframe
         self.image = pygame.transform.scale(pygame.image.load("./images/student-images/Pink_Monster.png"), (100, 100))
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
-        self.node = node
+        self.node = "17"
+        self.rect.center = self.df['positions'][self.node]
         self.is_moving = False
         self.next_positions = []  # implementing a stack
 
