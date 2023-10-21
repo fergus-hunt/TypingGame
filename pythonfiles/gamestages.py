@@ -133,7 +133,7 @@ class MainGame():
 
 
                 if self.scoreboard.score %100 == 0: 
-                    # self.enemy.movement_speed = self.enemy.movement_speed - 2
+                    self.enemy.movement_speed = int(20 - self.scoreboard.score/100)            
                     self.alert.new_round(self.scoreboard.score / 100)
 
 
