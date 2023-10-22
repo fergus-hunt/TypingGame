@@ -39,21 +39,25 @@ with open("./database/graph.json") as file:
 
 game_alert = Alert()
 
-summarymenu = SummaryMenu()
+testsummarymenu = TestSummaryMenu()
 startmenu = StartMenu()
 
-scene = 'menu'
+scene = 'StartMenu'
 
 
 while True: 
-    if scene == 'menu': 
+    if scene == 'StartMenu': 
         scene = startmenu.main_loop(WIN)
-    elif scene == "game":
-        textgame =  MainGame(graph, STOPPED_MOVING, NEXT_ANIMATION, GAME_OVER)
-        scene = textgame.main_loop(WIN, game_alert, CLASSROOM)
-    elif scene == "test": 
-        typingtest = TestGame()
-        typingtest.main_loop(WIN)
-    elif scene == "summary": 
-        summarymenu.get_stats(wpm=100, errors=100)
-        scene = summarymenu.main_loop(WIN)
+    elif scene == "TypingGame":
+        typinggame =  TypingGame(graph, STOPPED_MOVING, NEXT_ANIMATION, GAME_OVER)
+        scene = typinggame.main_loop(WIN, game_alert, CLASSROOM)
+    elif scene == "TypingTest": 
+        typingtest = TypingTest()
+        scene =typingtest.main_loop(WIN)
+    elif scene == "TestSummary": 
+        testsummarymenu.get_stats(wpm=100, errors=100)
+        scene = testsummarymenu.main_loop(WIN)
+    elif scene == "GameSummary": 
+        game_summary = GameSummaryMenu(score=typinggame.scoreboard.score)
+        scene = game_summary.main_loop(WIN)
+
