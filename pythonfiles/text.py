@@ -43,7 +43,7 @@ class Text(pygame.sprite.Sprite):
     def rendering_text(self):
         x_val = 0
         self.image.fill((255, 0, 255))
-        #coudl make quicker here. 
+       #coudl make quicker here. 
         for index, metric in zip(range(len(self.characters_unicode)), self.metrics):      
             character = self.characters_unicode[index] 
             if self.characters_completed[index] == "Na":
