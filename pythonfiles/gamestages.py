@@ -10,7 +10,7 @@ FONT = freetype.Font(None, 50)
 HEIGHT = 965
 WIDTH = 1285
 
-class SummaryMenu(): 
+class TestSummaryMenu(): 
         
     def get_stats(self, wpm, errors): 
         self.wpm = wpm
@@ -25,7 +25,7 @@ class SummaryMenu():
                     pygame.quit() 
                 if event.type == pygame.KEYDOWN: 
                     if event.key == pygame.K_SPACE: 
-                        return 'menu'
+                        return 'StartMenu'
 
             screen.fill('black')
 
@@ -33,7 +33,27 @@ class SummaryMenu():
             # FONT.render_to(screen, (WIDTH/2, HEIGHT/2), str(self.errors), 'red')
             pygame.display.update()
 
+class GameSummaryMenu(): 
+    def __init__(self, score):
+        self.score = score
+        self.menu_image, self.menu_rect = FONT.render("MENU", "blue")
+        self.menu_rect.center = (WIDTH/2, HEIGHT*0.25)
+        self.score_image, self.score_rect = FONT.render(f"Score: {self.score}", "blue")
+        self.score_rect.center = (WIDTH/2, HEIGHT*0.75)
 
+    def main_loop(self, screen): 
+        clock = pygame.time.Clock() 
+        while True: 
+            for event in pygame.event.get(): 
+                if event.type == pygame.QUIT: 
+                    pygame.quit()
+                if event.type == pygame.MOUSEBUTTONDOWN: 
+                    if self.menu_rect.collidepoint(event.pos): 
+                        return "StartMenu"
+            screen.fill("black")
+            screen.blit(self.menu_image, self.menu_rect)
+            screen.blit(self.score_image, self.score_rect)
+            pygame.display.update()
 
 
 
@@ -60,16 +80,14 @@ class StartMenu():
                 if event.type == pygame.MOUSEBUTTONDOWN: 
                     print(event.pos)
                     if self.play_button.collidepoint(event.pos): 
-                        return "game"
+                        return "TypingGame"
                     elif self.test_button.collidepoint(event.pos): 
-                        return "test"
-                    elif self.stats_button.collidepoint(event.pos): 
-                        return "summary"
+                        return "TypingTest"
             
             screen.fill('black')
             # self.render_text()
             screen.blit(self.play_surface, self.play_button)
-            screen.blit(self.stats_surface, self.stats_button)
+            # screen.blit(self.stats_surface, self.stats_button)
             screen.blit(self.test_surface, self.test_button)
             pygame.display.update()
 
@@ -79,7 +97,7 @@ class StartMenu():
 
 
 
-class MainGame(): 
+class TypingGame(): 
     def __init__(self, graph, character_moving, next_animation, game_over) -> None:
         self.STOP_MOVING = character_moving
         self.NEXT_ANIMATION = next_animation
@@ -144,7 +162,7 @@ class MainGame():
                     self.register_key(event)
 
                 if event.type == self.GAME_OVER: 
-                    return "summary"
+                    return "GameSummary"
                 
                 if event.type == self.NEXT_ANIMATION: 
                     self.sprites.update()
@@ -171,7 +189,7 @@ class MainGame():
             self.text_objects.draw(screen)
             pygame.display.update()
 
-class TestGame(): 
+class TypingTest(): 
     def __init__(self): 
         self.text_object = TypeTestText()
 
@@ -181,7 +199,7 @@ class TestGame():
         while True:
             clock.tick(60)
             if self.text_object.is_complete: 
-                return 'summary'
+                return 'TestSummary'
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit() 

@@ -4,6 +4,8 @@ pygame.init()
 
 FONT = pygame.freetype.Font(None, 35)
 FONT.origin = True 
+HEIGHT = 965
+WIDTH = 1285
 
 class TypeTestText(): 
     """renders new text, takes user key presses, analyses data"""
@@ -14,7 +16,9 @@ class TypeTestText():
         self.characters_unicode = [character for character in self.text]
         self.characters_completed = ['Na' for index in range(len(self.characters_unicode))]
         self.rect = FONT.get_rect(self.text)
+        self.baseline = self.rect.y 
         self.metrics = FONT.get_metrics(self.text)
+        self.rect.center = (WIDTH/2, HEIGHT/2)
 
     def get_text(self): 
         pd = pandas.read_csv('database\data.csv')
@@ -48,35 +52,34 @@ class TypeTestText():
 
     def rendering_text(self):
         x_val = 0
-        baseline = self.rect.y 
         text_surface = pygame.Surface(self.rect.size)
         completed = -550
         #coudl make quicker here. 
         for index, metric in zip(range(len(self.characters_unicode)), self.metrics):      
             character = self.characters_unicode[index] 
             if self.characters_completed[index] == "Na": 
-                FONT.render_to(text_surface,(x_val, baseline), character, 'white')
+                FONT.render_to(text_surface,(x_val, self.baseline), character, 'white')
                 x_val += metric[4]
             elif self.characters_completed[index]: 
-                FONT.render_to(text_surface, (x_val, baseline), character, "green")
+                FONT.render_to(text_surface, (x_val, self.baseline), character, "green")
                 x_val += metric[4]
                 completed += metric[4]
             elif not self.characters_completed[index]: 
-                FONT.render_to(text_surface, (x_val, baseline),character, "red")
+                FONT.render_to(text_surface, (x_val, self.baseline),character, "red")
                 x_val += metric[4]
                 completed += metric[4]
-        self.rect.x = 0-completed
 
+        self.rect.x = 0-completed
         self.surface= text_surface
 
-    def calculating_wpm(self): 
-        total_word = len(self.text.split())
-        total_time = (self.end_time - self.start_time) / 60
-        return round(total_word / (total_time), 2)
+    # def calculating_wpm(self): 
+    #     total_word = len(self.text.split())
+    #     total_time = (self.end_time - self.start_time) / 60
+    #     return round(total_word / (total_time), 2)
 
-    def calculate_errors(self): 
-        sum = 0
-        for i in self.characters_completed: 
-            if i == False:
-                sum += 1
-        return sum
+    # def calculate_errors(self): 
+    #     sum = 0
+    #     for i in self.characters_completed: 
+    #         if i == False:
+    #             sum += 1
+    #     return sum
