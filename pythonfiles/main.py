@@ -4,9 +4,9 @@ from text import Text
 from pygame import freetype
 from login import AuthenticateUser
 from gamestages import * 
-
 from alerts import Alert
 pygame.init()
+
 
 # Login = AuthenticateUser(database_manager=DatabaseManager)
 # Login.log_in_user()
@@ -14,7 +14,7 @@ pygame.init()
 # USERNAME = Login.username
 
 pygame.init()
-FPS = 20
+# FPS = 20
 HEIGHT = 965
 WIDTH = 1285
 
@@ -37,21 +37,23 @@ FONT.origin = True
 with open("./database/graph.json") as file: 
     graph = json.loads(file.read())
 
-sprites = pygame.sprite.Group()
 game_alert = Alert()
 
-summarymenu = SummaryMenu(FONT, WIDTH, HEIGHT, FPS)
+summarymenu = SummaryMenu()
+startmenu = StartMenu()
 
 scene = 'menu'
 
-startmenu = StartMenu(FPS)
 
 while True: 
     if scene == 'menu': 
         scene = startmenu.main_loop(WIN)
-    if scene == "game":
+    elif scene == "game":
         textgame =  MainGame(graph, STOPPED_MOVING, NEXT_ANIMATION, GAME_OVER)
         scene = textgame.main_loop(WIN, game_alert, CLASSROOM)
+    elif scene == "test": 
+        typingtest = TestGame()
+        typingtest.main_loop(WIN)
     elif scene == "summary": 
         summarymenu.get_stats(wpm=100, errors=100)
         scene = summarymenu.main_loop(WIN)
