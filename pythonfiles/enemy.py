@@ -54,7 +54,6 @@ class Enemy(pygame.sprite.Sprite):
                 self.path = self.find_user_path()
                 self.next_positions = self.calculate_enemy_movement()
             else: 
-                print(self.next_positions)
                 self.rect.center = self.next_positions[0] # moving the enemy foward 
                 del self.next_positions[0]
         else: 
@@ -68,7 +67,6 @@ class Enemy(pygame.sprite.Sprite):
         next_position = self.df['positions'][f"{next}"]
         x_denoms = (next_position[0] - current_position[0])/self.movement_speed
         y_denoms = (next_position[1] - current_position[1])/self.movement_speed
-        print(f"XDenoms: {x_denoms}\tYDENOMS: {y_denoms}")#
         temp_list = []
         for i in range(1, self.movement_speed+1): 
             next_pos = (round((i * x_denoms) + current_position[0], 2), round((i * y_denoms) + current_position[1], 2))
@@ -80,7 +78,6 @@ class Enemy(pygame.sprite.Sprite):
     def find_user_path(self): # find the best path 
         visited = {}
         unvisited = {}
-        print(self.df)
         for node in self.df['distances'].keys(): 
             unvisited[node] = [sys.maxsize, None]
 
@@ -112,5 +109,4 @@ class Enemy(pygame.sprite.Sprite):
             path.append(previous_node)
             temporary_node = visited[temporary_node][1]
 
-        print(f"PATH: {path}\tCURRENT NODE: {self.current_node}")
         return path
