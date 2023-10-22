@@ -4,25 +4,22 @@ from pygame import freetype
 from enemy import Enemy
 from maincharacter import MainCharacter
 from scoreboard import ScoreBoard
-
+from typetesttext import TypeTestText
 
 FONT = freetype.Font(None, 50)
+HEIGHT = 965
+WIDTH = 1285
 
 class SummaryMenu(): 
-    def __init__(self, FONT, WIDTH, HEIGHT, FPS) -> None:
-        self.clock = pygame.time.Clock()
-        self.font = FONT
-        self.width = WIDTH
-        self.height = HEIGHT
-        self.fps = FPS
         
     def get_stats(self, wpm, errors): 
         self.wpm = wpm
         self.errors = errors
 
     def main_loop(self, screen): 
+        clock = pygame.time.Clock()
         while True: 
-            self.clock.tick(self.fps)
+            clock.tick(60)
             for event in pygame.event.get(): 
                 if event.type == pygame.QUIT: 
                     pygame.quit() 
@@ -31,8 +28,9 @@ class SummaryMenu():
                         return 'menu'
 
             screen.fill('black')
-            self.font.render_to(screen, (self.width/2, self.height/2 + 50), str(self.wpm), 'blue')
-            self.font.render_to(screen, (self.width/2, self.height/2), str(self.errors), 'red')
+
+            # FONT.render_to(screen, (WIDTH/2, HEIGHT/2 + 50), str(self.wpm), 'blue')
+            # FONT.render_to(screen, (WIDTH/2, HEIGHT/2), str(self.errors), 'red')
             pygame.display.update()
 
 
@@ -42,21 +40,20 @@ class SummaryMenu():
 
 
 class StartMenu(): 
-    def __init__(self, FPS) -> None:        
-        self.clock = pygame.time.Clock()
-        self.fps = FPS
+    def __init__(self) -> None:        
         # self.play_button = FONT.get_rect("Play Game")
         # self.stats_button = FONT.get_rect("View Stats")
         self.play_surface, self.play_button = FONT.render("Play Game", 'blue')
         self.stats_surface, self.stats_button = FONT.render("View Stats", 'blue')
-        self.play_button.center = (200, 500)
-        self.stats_button.center = (500, 500)
-
-        
+        self.test_surface, self.test_button = FONT.render("Take Test", "blue")
+        self.play_button.center = (WIDTH/2, HEIGHT*0.25)
+        self.test_button.center = (WIDTH/2, HEIGHT/2)
+        self.stats_button.center = (WIDTH/2, 0.75*HEIGHT)
 
     def main_loop(self, screen): 
+        clock = pygame.time.Clock()
         while True: 
-            self.clock.tick(self.fps)
+            clock.tick(60)
             for event in pygame.event.get(): 
                 if event.type == pygame.QUIT : 
                     pygame.quit()
@@ -64,6 +61,8 @@ class StartMenu():
                     print(event.pos)
                     if self.play_button.collidepoint(event.pos): 
                         return "game"
+                    elif self.test_button.collidepoint(event.pos): 
+                        return "test"
                     elif self.stats_button.collidepoint(event.pos): 
                         return "summary"
             
@@ -71,6 +70,7 @@ class StartMenu():
             # self.render_text()
             screen.blit(self.play_surface, self.play_button)
             screen.blit(self.stats_surface, self.stats_button)
+            screen.blit(self.test_surface, self.test_button)
             pygame.display.update()
 
 
@@ -88,7 +88,7 @@ class MainGame():
 
         self.character = MainCharacter(character_moving, graph)
         self.enemy = Enemy(graph, game_over)
-        self.scoreboard = ScoreBoard(500, 0)
+        self.scoreboard = ScoreBoard()
         self.make_game_sprites()
         
         self.text_object = None
@@ -169,4 +169,25 @@ class MainGame():
             alert.refresh()
             self.text_objects.update()
             self.text_objects.draw(screen)
+            pygame.display.update()
+
+class TestGame(): 
+    def __init__(self): 
+        self.text_object = TypeTestText()
+
+
+    def main_loop(self, screen): 
+        clock = pygame.time.Clock()
+        while True:
+            clock.tick(60)
+            if self.text_object.is_complete: 
+                return 'summary'
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit() 
+                elif event.type == pygame.KEYDOWN: 
+                    self.text_object.register_key(event)
+            self.text_object.rendering_text()
+            screen.fill("black") 
+            screen.blit(self.text_object.surface, self.text_object.rect)
             pygame.display.update()

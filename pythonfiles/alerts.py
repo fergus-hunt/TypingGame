@@ -3,15 +3,14 @@ import pygame
 from pygame import freetype 
 
 FONT = freetype.Font(None, 100)
-FONT.origin = True
-
+HEIGHT = 965
+WIDTH = 1285
 
 class Alert(): 
     def __init__(self):
         self.rect = FONT.get_rect("ROUND 0")
-        self.baseline = self.rect.y
         self.image = pygame.Surface(self.rect.size)
-        self.rect.center = (500, 400)
+        self.rect.center = (WIDTH/2, HEIGHT/5)
         self.count = 0
 
     def refresh(self): 
@@ -25,8 +24,7 @@ class Alert():
 
     def new_round(self, round): 
         text = f"ROUND {round}"
-        self.rect = FONT.get_rect(text)
-        self.image = pygame.Surface(self.rect.size)
-        self.baseline = self.rect.y
-        self.rect.center = (500, 400)
-        FONT.render_to(self.image, (0, self.baseline), text, 'blue')
+        self.image, self.rect = FONT.render(text,"blue")
+        # self.image = pygame.Surface(self.rect.size) 
+        self.rect.center = (WIDTH/2, HEIGHT/5)
+        # FONT.render_to(self.image, (0, 0), text, 'blue')
