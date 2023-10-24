@@ -1,6 +1,8 @@
 import requests, lorem, pygame, time, pandas, random
 import pygame.freetype
 pygame.init()
+pygame.mixer.init()
+
 
 FONT = pygame.freetype.Font(None, 50)
 FONT.origin = True 
@@ -12,6 +14,7 @@ URL = f"https://api.quotable.io/quotes/random"
 class TypeTestText(): 
     """renders new text, takes user key presses, analyses data"""
     def __init__(self) -> None:
+        self.noise = pygame.mixer.Sound("images/typewriter.wav")
         self.text= self.get_text()
         self.next_key = 0
         self.is_complete = False
@@ -21,6 +24,7 @@ class TypeTestText():
         self.baseline = self.rect.y 
         self.metrics = FONT.get_metrics(self.text)
         self.rect.center = (WIDTH/2, HEIGHT/2)
+
 
     def get_text(self): 
         # pd = pandas.read_csv('database\data.csv')
