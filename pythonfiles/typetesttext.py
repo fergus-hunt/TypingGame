@@ -2,10 +2,12 @@ import requests, lorem, pygame, time, pandas, random
 import pygame.freetype
 pygame.init()
 
-FONT = pygame.freetype.Font(None, 35)
+FONT = pygame.freetype.Font(None, 50)
 FONT.origin = True 
 HEIGHT = 965
 WIDTH = 1285
+
+URL = f"https://api.quotable.io/quotes/random"
 
 class TypeTestText(): 
     """renders new text, takes user key presses, analyses data"""
@@ -21,10 +23,13 @@ class TypeTestText():
         self.rect.center = (WIDTH/2, HEIGHT/2)
 
     def get_text(self): 
-        pd = pandas.read_csv('database\data.csv')
-        text_index = random.randint(0, len(pd)-1)
-        text = pd.loc[text_index]
-        return text.passage
+        # pd = pandas.read_csv('database\data.csv')
+        # text_index = random.randint(0, len(pd)-1)
+        # text = pd.loc[text_index]
+        response = requests.get(URL)
+        response.raise_for_status()
+
+        return response.json()[0]["content"]
 
     def reset(self):
         self.text= self.get_text()
@@ -37,6 +42,7 @@ class TypeTestText():
     
     def register_key(self, event):
         if self.next_key == len(self.characters_completed):
+            self.end_time = time.time()
             self.is_complete = True
         else: 
             if event.key == pygame.K_BACKSPACE: 
@@ -72,14 +78,14 @@ class TypeTestText():
         self.rect.x = 0-completed
         self.surface= text_surface
 
-    # def calculating_wpm(self): 
-    #     total_word = len(self.text.split())
-    #     total_time = (self.end_time - self.start_time) / 60
-    #     return round(total_word / (total_time), 2)
+    def calculating_wpm(self, start_time, end_time): 
+        total_word = len(self.text.split())
+        total_time = (end_time - start_time) / 60
+        return round(total_word / (total_time), 2)
 
-    # def calculate_errors(self): 
-    #     sum = 0
-    #     for i in self.characters_completed: 
-    #         if i == False:
-    #             sum += 1
-    #     return sum
+    def calculate_errors(self): 
+        sum = 0
+        for i in self.characters_completed: 
+            if i == False:
+                sum += 1
+        return sum
