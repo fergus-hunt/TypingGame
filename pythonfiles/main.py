@@ -21,8 +21,8 @@ WIDTH = 1285
 STOPPED_MOVING = (pygame.USEREVENT + 1)
 NEXT_ANIMATION = (pygame.USEREVENT + 2)
 GAME_OVER = (pygame.USEREVENT + 3)
-CLASSROOM=pygame.image.load("images\classroom4.png")
-
+CLASSROOM=pygame.image.load("images\\backgrounds\\classroom4.png")
+MENUBACKGROUND = pygame.transform.scale(pygame.image.load("images\\backgrounds\\haunted_house.jpeg"), (WIDTH, HEIGHT))
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 CLOCK = pygame.time.Clock() 
 
@@ -47,17 +47,17 @@ scene = 'StartMenu'
 
 while True: 
     if scene == 'StartMenu': 
-        scene = startmenu.main_loop(WIN)
+        scene = startmenu.main_loop(WIN, MENUBACKGROUND)
     elif scene == "TypingGame":
         typinggame =  TypingGame(graph, STOPPED_MOVING, NEXT_ANIMATION, GAME_OVER)
         scene = typinggame.main_loop(WIN, game_alert, CLASSROOM)
     elif scene == "TypingTest": 
         typingtest = TypingTest()
-        scene =typingtest.main_loop(WIN)
+        scene =typingtest.main_loop(WIN, MENUBACKGROUND)
     elif scene == "TestSummary": 
         testsummarymenu.get_stats(wpm=100, errors=100)
-        scene = testsummarymenu.main_loop(WIN)
+        scene = testsummarymenu.main_loop(WIN, MENUBACKGROUND)
     elif scene == "GameSummary": 
         game_summary = GameSummaryMenu(score=typinggame.scoreboard.score)
-        scene = game_summary.main_loop(WIN)
+        scene = game_summary.main_loop(WIN, MENUBACKGROUND)
 

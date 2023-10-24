@@ -16,7 +16,7 @@ class TestSummaryMenu():
         self.wpm = wpm
         self.errors = errors
 
-    def main_loop(self, screen): 
+    def main_loop(self, screen, background): 
         clock = pygame.time.Clock()
         while True: 
             clock.tick(60)
@@ -28,7 +28,7 @@ class TestSummaryMenu():
                         return 'StartMenu'
 
             screen.fill('black')
-
+            screen.blit(background, (0, 0))
             # FONT.render_to(screen, (WIDTH/2, HEIGHT/2 + 50), str(self.wpm), 'blue')
             # FONT.render_to(screen, (WIDTH/2, HEIGHT/2), str(self.errors), 'red')
             pygame.display.update()
@@ -41,7 +41,7 @@ class GameSummaryMenu():
         self.score_image, self.score_rect = FONT.render(f"Score: {self.score}", "blue")
         self.score_rect.center = (WIDTH/2, HEIGHT*0.75)
 
-    def main_loop(self, screen): 
+    def main_loop(self, screen, background): 
         clock = pygame.time.Clock() 
         while True: 
             for event in pygame.event.get(): 
@@ -51,6 +51,7 @@ class GameSummaryMenu():
                     if self.menu_rect.collidepoint(event.pos): 
                         return "StartMenu"
             screen.fill("black")
+            screen.blit(background, (0, 0))
             screen.blit(self.menu_image, self.menu_rect)
             screen.blit(self.score_image, self.score_rect)
             pygame.display.update()
@@ -70,7 +71,7 @@ class StartMenu():
         self.test_button.center = (WIDTH/2, HEIGHT/2)
         self.stats_button.center = (WIDTH/2, 0.75*HEIGHT)
 
-    def main_loop(self, screen): 
+    def main_loop(self, screen, background): 
         clock = pygame.time.Clock()
         while True: 
             clock.tick(60)
@@ -85,9 +86,8 @@ class StartMenu():
                         return "TypingTest"
             
             screen.fill('black')
-            # self.render_text()
+            screen.blit(background, (0, 0))
             screen.blit(self.play_surface, self.play_button)
-            # screen.blit(self.stats_surface, self.stats_button)
             screen.blit(self.test_surface, self.test_button)
             pygame.display.update()
 
@@ -150,6 +150,7 @@ class TypingGame():
         for position in positions: 
             self.text_objects.add(Text(position[0],position[1], position[2]))
 
+
     def main_loop(self, screen, alert, background): 
         pygame.time.set_timer(self.NEXT_ANIMATION, 200)
         clock = pygame.time.Clock()
@@ -158,7 +159,7 @@ class TypingGame():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit() 
-                elif event.type == pygame.KEYDOWN: 
+                elif event.type == pygame.KEYDOWN and not self.character.is_moving: 
                     self.register_key(event)
 
                 if event.type == self.GAME_OVER: 
@@ -194,7 +195,7 @@ class TypingTest():
         self.text_object = TypeTestText()
 
 
-    def main_loop(self, screen): 
+    def main_loop(self, screen, background): 
         clock = pygame.time.Clock()
         while True:
             clock.tick(60)
@@ -207,5 +208,6 @@ class TypingTest():
                     self.text_object.register_key(event)
             self.text_object.rendering_text()
             screen.fill("black") 
+            screen.blit(background, (0, 0))
             screen.blit(self.text_object.surface, self.text_object.rect)
             pygame.display.update()
