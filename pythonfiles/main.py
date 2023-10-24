@@ -5,13 +5,17 @@ from pygame import freetype
 from login import AuthenticateUser
 from gamestages import * 
 from alerts import Alert
+from databasemanager import DatabaseManager
 pygame.init()
 
+DataManager = DatabaseManager()
 
 # Login = AuthenticateUser(database_manager=DatabaseManager)
 # Login.log_in_user()
 # Login.root.mainloop()
 # USERNAME = Login.username
+
+USERNAME = "Fergus"
 
 pygame.init()
 # FPS = 20
@@ -44,20 +48,25 @@ startmenu = StartMenu()
 
 scene = 'StartMenu'
 
+# get a new font. 
 
 while True: 
     if scene == 'StartMenu': 
         scene = startmenu.main_loop(WIN, MENUBACKGROUND)
     elif scene == "TypingGame":
         typinggame =  TypingGame(graph, STOPPED_MOVING, NEXT_ANIMATION, GAME_OVER)
-        scene = typinggame.main_loop(WIN, game_alert, CLASSROOM)
+        scene, score = typinggame.main_loop(WIN, game_alert, CLASSROOM)
+        DataManager.upload_game_score(USERNAME, score)
     elif scene == "TypingTest": 
         typingtest = TypingTest()
-        scene =typingtest.main_loop(WIN, MENUBACKGROUND)
+        scene, words_per_minute, errors = typingtest.main_loop(WIN, MENUBACKGROUND)
+        DataManager.upload_test_score(USERNAME, words_per_minute, errors)
     elif scene == "TestSummary": 
-        testsummarymenu.get_stats(wpm=100, errors=100)
+        # return wpm, errors and statistics 
+        testsummarymenu.get_stats(words_per_minute, errors)
         scene = testsummarymenu.main_loop(WIN, MENUBACKGROUND)
     elif scene == "GameSummary": 
+        # return score, record high score. 
         game_summary = GameSummaryMenu(score=typinggame.scoreboard.score)
         scene = game_summary.main_loop(WIN, MENUBACKGROUND)
 

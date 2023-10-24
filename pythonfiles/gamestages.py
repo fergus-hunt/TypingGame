@@ -1,4 +1,4 @@
-import pygame, pandas, json, numpy
+import pygame, pandas, json, numpy, time
 from text import Text
 from pygame import freetype 
 from enemy import Enemy
@@ -15,6 +15,10 @@ class TestSummaryMenu():
     def get_stats(self, wpm, errors): 
         self.wpm = wpm
         self.errors = errors
+        self.wpm_image, self.wpm_rect = FONT.render("WORDS PER MINUTE : " + str(self.wpm), 'blue')
+        self.wpm_rect.center = (WIDTH/2, (HEIGHT*2)/3)
+        self.error_image, self.error_rect = FONT.render("ERRORS : " + str(self.errors), 'red')
+        self.error_rect.center = (WIDTH/2, HEIGHT/3)
 
     def main_loop(self, screen, background): 
         clock = pygame.time.Clock()
@@ -29,8 +33,10 @@ class TestSummaryMenu():
 
             screen.fill('black')
             screen.blit(background, (0, 0))
-            # FONT.render_to(screen, (WIDTH/2, HEIGHT/2 + 50), str(self.wpm), 'blue')
-            # FONT.render_to(screen, (WIDTH/2, HEIGHT/2), str(self.errors), 'red')
+            screen.blit(self.error_image, self.error_rect)
+            screen.blit(self.wpm_image, self.wpm_rect)
+            # FONT.render_to(screen, (WIDTH/2, HEIGHT/3), "WORDS PER MINUTE : " + str(self.wpm), 'blue')
+            # FONT.render_to(screen, (WIDTH/2, (HEIGHT*2)/3), "ERRORS : " + str(self.errors), 'red')
             pygame.display.update()
 
 class GameSummaryMenu(): 
@@ -163,7 +169,7 @@ class TypingGame():
                     self.register_key(event)
 
                 if event.type == self.GAME_OVER: 
-                    return "GameSummary"
+                    return "GameSummary", self.scoreboard.score
                 
                 if event.type == self.NEXT_ANIMATION: 
                     self.sprites.update()
@@ -173,8 +179,6 @@ class TypingGame():
                     self.make_new_text_sprites()
                     self.scoreboard.update_score()
             
-
-
                 if self.scoreboard.score %100 == 0: 
                     self.enemy.movement_speed = int(20 - self.scoreboard.score/100)            
                     alert.new_round(self.scoreboard.score / 100)
@@ -197,10 +201,14 @@ class TypingTest():
 
     def main_loop(self, screen, background): 
         clock = pygame.time.Clock()
+        start_time = time.time()
         while True:
             clock.tick(60)
             if self.text_object.is_complete: 
-                return 'TestSummary'
+                end_time = time.time()
+                words_per_minute = self.text_object.calculating_wpm(start_time, end_time)
+                errors = self.text_object.calculate_errors()
+                return 'TestSummary', words_per_minute, errors
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit() 
