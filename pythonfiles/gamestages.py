@@ -119,6 +119,9 @@ class TypingGame():
         self.text_objects = pygame.sprite.Group()
         self.make_new_text_sprites()
 
+        self.music = pygame.mixer.Sound("images/game_music.mp3")
+        self.key_noise = pygame.mixer.Sound('images/typewriter.wav')
+
     def make_game_sprites(self): 
         self.sprites = pygame.sprite.Group()
         self.sprites.add(self.character)
@@ -160,12 +163,14 @@ class TypingGame():
     def main_loop(self, screen, alert, background): 
         pygame.time.set_timer(self.NEXT_ANIMATION, 200)
         clock = pygame.time.Clock()
+        self.music.play()
         while True:
             clock.tick(60)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit() 
                 elif event.type == pygame.KEYDOWN and not self.character.is_moving: 
+                    self.key_noise.play()
                     self.register_key(event)
 
                 if event.type == self.GAME_OVER: 
@@ -213,6 +218,7 @@ class TypingTest():
                 if event.type == pygame.QUIT:
                     pygame.quit() 
                 elif event.type == pygame.KEYDOWN: 
+                    self.text_object.noise.play()
                     self.text_object.register_key(event)
             self.text_object.rendering_text()
             screen.fill("black") 
