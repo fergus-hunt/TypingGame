@@ -4,7 +4,9 @@ from pygame import freetype
 from enemy import Enemy
 from maincharacter import MainCharacter
 from scoreboard import ScoreBoard
+from result_viewer import ResultViewer
 from typetesttext import TypeTestText
+from databasemanager import DatabaseManager
 
 FONT = freetype.Font(None, 50)
 HEIGHT = 965
@@ -90,11 +92,16 @@ class StartMenu():
                         return "TypingGame"
                     elif self.test_button.collidepoint(event.pos): 
                         return "TypingTest"
+                    elif self.stats_button.collidepoint(event.pos):
+                        tempmanager = DatabaseManager()
+                        userresult=tempmanager.get_user_scores()
+                        results = ResultViewer(userresult)
             
             screen.fill('black')
             screen.blit(background, (0, 0))
             screen.blit(self.play_surface, self.play_button)
             screen.blit(self.test_surface, self.test_button)
+            screen.blit(self.stats_surface, self.stats_button)
             pygame.display.update()
 
 
@@ -169,12 +176,13 @@ class TypingGame():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit() 
+                if event.type == self.GAME_OVER: 
+                    self.music.stop()
+                    return "GameSummary", self.scoreboard.score
                 elif event.type == pygame.KEYDOWN and not self.character.is_moving: 
                     self.key_noise.play()
                     self.register_key(event)
 
-                if event.type == self.GAME_OVER: 
-                    return "GameSummary", self.scoreboard.score
                 
                 if event.type == self.NEXT_ANIMATION: 
                     self.sprites.update()
