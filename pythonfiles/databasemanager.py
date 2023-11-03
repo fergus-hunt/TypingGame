@@ -38,4 +38,13 @@ class DatabaseManager():
             cur = con.cursor()
             cur.execute(f"""INSERT INTO test_scores VALUES ('{username}', '{wpm}', '{errors}', '{date}')""")
             con.commit()
+    
+    def get_user_scores(self):
+        with sqlite3.connect("database/app_data.db") as con:
+            cur = con.cursor()
+            info = cur.execute(f"""SELECT  score, date FROM game_scores""")
+
+        return info.fetchall()
+        
+
         
