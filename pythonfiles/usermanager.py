@@ -3,14 +3,15 @@ from tkinter import messagebox
 from databasemanager import DatabaseManager
 # generate good user passworeds
 
-class AuthenticateUser():
+class UserManager():
     def __init__(self, database_manager) -> None:
         self.database_manager = database_manager()
         self.root = tkinter.Tk()
 
 
 
-    def log_in_user(self, **kwargs):  # frame to get user information
+    def log_in_user(self, **kwargs): 
+        """Tkinter window to allow user to log into account. """
         if kwargs.get('previous_frame'):
             previous_frame = kwargs.get('previous_frame')
             previous_frame.destroy()
@@ -33,12 +34,11 @@ class AuthenticateUser():
         submit_log_in.grid(column=1, row=1, rowspan=2)
         user_log_in_frame.grid(column=0, row=1)
 
-    def authenticate_old_user(self, username, password): # compares user password to users in database
+    def authenticate_old_user(self, username, password): 
+        """Function to check user input matches the user stored in the database, then exits window"""
         users = self.database_manager.get_username_password()
         not_found = True
         count = -1
-
-        # could implement other sorting algorithm 
         while not_found and count < len(users)-1:
             count += 1
             user = users[count]
@@ -53,7 +53,8 @@ class AuthenticateUser():
             self.username =  username
     
 
-    def creating_user_frame(self, **kwargs): # allows user to create account
+    def creating_user_frame(self, **kwargs): 
+        """Tkinter window to allow user to create a new account"""
         if kwargs.get('previous_frame'):
             previous_frame = kwargs.get('previous_frame')
             previous_frame.destroy()
@@ -80,7 +81,8 @@ class AuthenticateUser():
         submit_new_account.grid(column=1, row=1, rowspan=2)
         create_account_frame.grid(column=0, row=1)
 
-    def new_create_user_record(self, username, password,email,  old_frame): # inputs new user information into database
+    def new_create_user_record(self, username, password,email,  old_frame):
+        """Inputs the new user accoutn in the database, then returns the window that allows them to login"""
         users_database = self.database_manager.get_username_password()
         usernames = [username for username, password in users_database]
 

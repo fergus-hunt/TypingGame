@@ -1,6 +1,7 @@
 import pygame, sys, json, pprint
 
 class Enemy(pygame.sprite.Sprite): 
+    """Class to simulate the enemy."""
     def __init__(self, graph): 
         pygame.sprite.Sprite.__init__(self)
         
@@ -10,8 +11,6 @@ class Enemy(pygame.sprite.Sprite):
         self.path = []
         self.next_positions = []
 
-
-        
         self.movement_speed = 20
         self.animations = []
         self.get_animations("right")
@@ -21,7 +20,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.center = (self.df['positions'][f"{self.current_node}"])
 
     def get_animations(self, direction): 
-
+        """Loads the images files into pygame surfaces stored in a attribute array"""
         path = f"./images/enemy-skeleton/skeleton-{direction}/"
         for i in range(12): 
             if i >= 10: 
@@ -31,22 +30,23 @@ class Enemy(pygame.sprite.Sprite):
             self.animations.append(image)
         
     def update(self): 
-        
-            if len(self.next_positions) == 0: 
-                self.animations = []
-                self.current_node = self.path[-1]
-                self.next_node = self.path[-2]
-                del self.path[-1]
-                self.enemymovements()
-            else: 
-                self.animation_index += 1
-                if self.animation_index >= len(self.animations): 
-                    self.animation_index = 0
-                self.image = self.animations[self.animation_index]
-                self.rect.center = self.next_positions[0] # moving the enemy foward 
-                del self.next_positions[0]
+        """Updates the enemies position and animation"""
+        if len(self.next_positions) == 0: 
+            self.animations = []
+            self.current_node = self.path[-1]
+            self.next_node = self.path[-2]
+            del self.path[-1]
+            self.enemymovements()
+        else: 
+            self.animation_index += 1
+            if self.animation_index >= len(self.animations): 
+                self.animation_index = 0
+            self.image = self.animations[self.animation_index]
+            self.rect.center = self.next_positions[0] # moving the enemy foward 
+            del self.next_positions[0]
 
-    def enemymovements(self): # splits up the movement from current node to next node
+    def enemymovements(self): 
+        """Divides enemy movement between the current and the next node"""
         current_position = self.df['positions'][f"{self.current_node}"]
         next_position = self.df['positions'][f"{self.next_node}"]
         x_denoms = (next_position[0] - current_position[0])/self.movement_speed

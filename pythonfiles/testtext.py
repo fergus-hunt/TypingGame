@@ -11,7 +11,7 @@ WIDTH = 1285
 
 URL = f"https://api.quotable.io/quotes/random"
 
-class TypeTestText(): 
+class TestText(): 
     """renders new text, takes user key presses, analyses data"""
     def __init__(self) -> None:
         self.noise = pygame.mixer.Sound("images/typewriter.wav")
