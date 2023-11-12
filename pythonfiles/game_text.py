@@ -26,7 +26,7 @@ class GameText(pygame.sprite.Sprite):
         self.characters_completed = ["Na" for index in range(len(self.characters_unicode))]
         self.image = pygame.Surface(self.rect.size)
         self.image.set_colorkey((255, 0, 255))
-        self.node = node
+        self.current_node = node
         self.baseline = self.rect.y
         self.rect.center = (x, y)
 
@@ -40,11 +40,10 @@ class GameText(pygame.sprite.Sprite):
 
     def generate_text(self):
         """Generate the new text for object. """
-        text = ""
+        self.text = ""
         for i in range(2):
             num = random.randint(0, 25)
-            text += string.ascii_lowercase[num]
-        self.text = text
+            self.text += string.ascii_lowercase[num]
 
     def rendering_text(self):
         """Renders the new text, and changes colour based on whether it's status"""
