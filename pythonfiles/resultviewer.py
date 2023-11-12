@@ -1,6 +1,6 @@
 import tkinter
-from tkinter import ttk
 from tkinter import messagebox
+from tkinter import ttk
 
 
 class ResultViewer(tkinter.Tk):
@@ -26,4 +26,5 @@ class ResultViewer(tkinter.Tk):
     def item_view(self, event):
         for thing in self.graph.selection():
             item = self.graph.item(thing)
-            messagebox.showinfo(title='Result', message=f"First Item : {item['values'][0]}Second Item : {item['values'][1]}")
+            messagebox.showinfo(title='Result',
+                                message=f"First Item : {item['values'][0]}Second Item : {item['values'][1]}")
