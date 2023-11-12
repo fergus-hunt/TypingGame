@@ -18,6 +18,7 @@ class ScoreBoard(pygame.sprite.Sprite):
         self.rect.center = (WIDTH/2, 25)
 
     def update_scoreboard(self): 
+        """updates the user's score and keeps track."""
         self.score += self.score_increment
         self.image, self.rect = FONT.render(str(self.score), "blue")
         self.rect.center = (WIDTH/2, 25)

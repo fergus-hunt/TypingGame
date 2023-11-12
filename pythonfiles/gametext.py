@@ -9,7 +9,7 @@ API_TOKEN = "TfYf279t3YTCMftnoaNsg23Zbi13H5xblBHvu4yw"
 URL = f"https://quotes.rest/qod.json?api_key={API_TOKEN}"
 
 
-class Text(pygame.sprite.Sprite): 
+class GameText(pygame.sprite.Sprite): 
     """renders new text, takes user key presses, analyses data"""
     def __init__(self, x, y, node) -> None:
         pygame.sprite.Sprite.__init__(self)
@@ -30,10 +30,12 @@ class Text(pygame.sprite.Sprite):
         self.rendering_text()
 
     def characters_reset(self): 
+        """Resets the text if the user got letter wrong"""
         for index in range(len(self.characters_completed)):
             self.characters_completed[index] = "Na"
 
     def generate_text(self): 
+        """Generate the new text for object. """
         text = ""
         for i in range(2):
             num = random.randint(0, 25) 
@@ -41,6 +43,7 @@ class Text(pygame.sprite.Sprite):
         return text
         
     def rendering_text(self):
+        """Renders the new text, and changes colour based on whether it's status"""
         x_val = 0
         self.image.fill((255, 0, 255))
        #coudl make quicker here. 

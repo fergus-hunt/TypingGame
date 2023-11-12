@@ -1,15 +1,16 @@
 import pygame
 import json
-from text import Text
+
 
 pygame.init()
 class MainCharacter(pygame.sprite.Sprite): 
+    """Class to represent the user character"""
     def __init__(self): 
         pygame.sprite.Sprite.__init__(self)
         
         self.image = pygame.transform.scale(pygame.image.load("./images/blue-devout/devouted-back/tile000.png"), (80, 80))
         self.rect = self.image.get_rect()
-        self.node = "17"
+        self.current_node = "17"
         self.animations = []
         self.rect.center = (653, 749)
         self.stopped_moving = False
@@ -17,6 +18,7 @@ class MainCharacter(pygame.sprite.Sprite):
         self.next_positions = []  # implementing a stack
 
     def update(self):
+        """Updates the character to the new position"""
         if len(self.next_positions) == 0 and len(self.animations) > 0: 
             self.is_moving = False
             self.image = self.animations[0]
@@ -32,10 +34,9 @@ class MainCharacter(pygame.sprite.Sprite):
             del self.next_positions[0]
     
     def movement_steps(self, next_node, next_position): 
+        """calculates the user next steps based on there current node and their next one"""
         current_position = self.rect.center
-        self.node = next_node
-
-        
+        self.current_node = next_node
         x_denoms = (next_position[0] - current_position[0])/6
         y_denoms = (next_position[1] - current_position[1])/6
         if (abs(x_denoms)) > abs(y_denoms): 

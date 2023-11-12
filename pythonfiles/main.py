@@ -1,10 +1,9 @@
 import pygame, time, lorem, pyautogui, pandas, random, json
 from tkinter import messagebox
-from text import Text
+from testtext import TestText
 from pygame import freetype
-from login import AuthenticateUser
+from usermanager import UserManager
 from gamestages import * 
-from alerts import Alert
 from databasemanager import DatabaseManager
 pygame.init()
 
@@ -40,8 +39,6 @@ with open("./database/graph.json") as file:
 
 
 
-testsummarymenu = TestSummaryMenu()
-startmenu = StartMenu()
 
 scene = 'StartMenu'
 
@@ -50,6 +47,7 @@ clock = pygame.time.Clock()
 
 while True: 
     if scene == 'StartMenu': 
+        startmenu = StartMenu()
         scene = startmenu.main_loop(WIN, MENUBACKGROUND, clock)
     elif scene == "TypingGame":
         typinggame =  TypingGame(graph)
@@ -57,14 +55,14 @@ while True:
         DataManager.upload_game_score(USERNAME, score)
     elif scene == "TypingTest": 
         typingtest = TypingTest()
-        scene, words_per_minute, errors = typingtest.main_loop(WIN, MENUBACKGROUND)
+        scene, words_per_minute, errors = typingtest.main_loop(WIN, MENUBACKGROUND, clock)
         DataManager.upload_test_score(USERNAME, words_per_minute, errors)
     elif scene == "TestSummary": 
         # return wpm, errors and statistics 
-        testsummarymenu.get_stats(words_per_minute, errors)
-        scene = testsummarymenu.main_loop(WIN, MENUBACKGROUND)
+        testsummarymenu = TestSummaryMenu(words_per_minute, errors)
+        scene = testsummarymenu.main_loop(WIN, MENUBACKGROUND, clock)
     elif scene == "GameSummary": 
         # return score, record high score. 
         game_summary = GameSummaryMenu(score=typinggame.scoreboard.score)
-        scene = game_summary.main_loop(WIN, MENUBACKGROUND)
+        scene = game_summary.main_loop(WIN, MENUBACKGROUND, clock)
 

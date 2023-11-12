@@ -1,11 +1,11 @@
-import pygame, pandas, json, numpy, time, sys
-from text import Text
+import pygame, time, sys
+from gametext import GameText
 from pygame import freetype 
 from enemy import Enemy
 from maincharacter import MainCharacter
 from scoreboard import ScoreBoard
-from result_viewer import ResultViewer
-from typetesttext import TypeTestText
+from resultviewer import ResultViewer
+from testtext import TestText
 from databasemanager import DatabaseManager
 
 FONT = freetype.Font(None, 50)
@@ -13,19 +13,19 @@ HEIGHT = 965
 WIDTH = 1285
 
 class TestSummaryMenu(): 
-        
-    def get_stats(self, wpm, errors): 
+    """class to show the post text menu screen"""
+    def __init__(self, wpm, errors):
         self.wpm = wpm
         self.errors = errors
-        self.wpm_image, self.wpm_rect = FONT.render("WORDS PER MINUTE : " + str(self.wpm), 'blue')
+        self.wpm_image, self.wpm_rect = FONT.render("WORDS PER MINUTE : " + str(self.wpm), 'blue') 
         self.wpm_rect.center = (WIDTH/2, (HEIGHT*2)/3)
         self.error_image, self.error_rect = FONT.render("ERRORS : " + str(self.errors), 'red')
         self.error_rect.center = (WIDTH/2, HEIGHT/3)
 
-    def main_loop(self, screen, background): 
-        clock = pygame.time.Clock()
+    def main_loop(self, screen, background, clock): 
+        """The main pygame loop, shows user WPM, errors and option to return to main menu"""
         while True: 
-            clock.tick()
+            clock.tick(60)
             for event in pygame.event.get(): 
                 if event.type == pygame.QUIT: 
                     pygame.quit() 
@@ -47,23 +47,22 @@ class GameSummaryMenu():
         self.score_image, self.score_rect = FONT.render(f"Score: {self.score}", "blue")
         self.score_rect.center = (WIDTH/2, HEIGHT*0.75)
 
-    def main_loop(self, screen, background): 
-        clock = pygame.time.Clock() 
+    def main_loop(self, screen, background, clock): 
+        """main pygame loop, shows game score, and option to return to main menu"""
         while True: 
+            clock.tick(60)
             for event in pygame.event.get(): 
                 if event.type == pygame.QUIT: 
                     pygame.quit()
                 if event.type == pygame.MOUSEBUTTONDOWN: 
                     if self.menu_rect.collidepoint(event.pos): 
                         return "StartMenu"
+                    
             screen.fill("black")
             screen.blit(background, (0, 0))
             screen.blit(self.menu_image, self.menu_rect)
             screen.blit(self.score_image, self.score_rect)
             pygame.display.update()
-
-
-
 
 
 class StartMenu(): 
@@ -76,6 +75,7 @@ class StartMenu():
         self.stats_button.center = (WIDTH/2, 0.75*HEIGHT)
 
     def main_loop(self, screen, background, clock): 
+        """Main pygame loop, shows buttons to play game, take the test and view user statistics"""
         while True: 
             clock.tick(60)
             for event in pygame.event.get(): 
@@ -116,12 +116,14 @@ class TypingGame():
         self.key_noise = pygame.mixer.Sound('images/typewriter.wav')
 
     def make_game_sprites(self): 
+        """Initializes the sprite group which contains the user, enemy and scoreboard. """
         self.sprites = pygame.sprite.Group()
         self.sprites.add(self.character)
         self.sprites.add(self.enemy)
         self.sprites.add(self.scoreboard)
 
     def alert(self, screen):
+        """shows the current round within pygame screen"""
         if self.scoreboard.score % 100 == 0:
             alert_image, alert_rect = FONT.render(f"Round {self.scoreboard.score}")
             alert_rect.center = (WIDTH/2, HEIGHT/5)
@@ -130,7 +132,8 @@ class TypingGame():
 
 
     def calculate_enemy_path(self):
-        if self.enemy.current_node != self.character.node:
+        """Dijkstra's algorithm to find the shortest path enemy can take towards user"""
+        if self.enemy.current_node != self.character.current_node:
             visited = {}
             unvisited = {}
             for node in self.df['distances'].keys(): 
@@ -152,11 +155,11 @@ class TypingGame():
                 visited[current_node] = unvisited[current_node]
                 del unvisited[current_node]
 
-            node = visited[str(self.character.node)]
+            node = visited[str(self.character.current_node)]
             temporary_node = node[1]
 
-            path = [self.character.node, node[1]]
-            while temporary_node != self.enemy.next_node and self.enemy.current_node != self.character.node:
+            path = [self.character.current_node, node[1]]
+            while temporary_node != self.enemy.next_node and self.enemy.current_node != self.character.current_node:
 
                 previous_node = visited[temporary_node][1]
                 path.append(previous_node)
@@ -169,7 +172,7 @@ class TypingGame():
 
 
     def register_key(self, event):
-       
+        """Registers the key presses for user against the surrounding text objects"""       
         if self.text_object == None: 
             counter = 0
             while counter < (len(self.text_objects.sprites())): 
@@ -194,19 +197,19 @@ class TypingGame():
                 self.text_object = None
             
     def make_new_text_sprites(self): 
+        """Makes new text sprites when user has arrived at new checkpoint"""
         self.text_object = None
-        positions = [(self.df['positions'][node][0], self.df['positions'][node][1], node) for node in self.df['distances'][f"{self.character.node}"]]
+        positions = [(self.df['positions'][node][0], self.df['positions'][node][1], node) for node in self.df['distances'][f"{self.character.current_node}"]]
         self.text_objects.empty()
         for position in positions: 
-            self.text_objects.add(Text(position[0],position[1], position[2]))
+            self.text_objects.add(GameText(position[0],position[1], position[2]))
 
 
     def main_loop(self, screen,  background, clock): 
+        """Main pygame loop where the user plays the game"""
         self.calculate_enemy_path()
-        
         # self.music.play()
         tick_interval = 0
-
         while True:
             clock.tick(60)
             tick_interval += clock.get_time()
@@ -221,12 +224,12 @@ class TypingGame():
 
             if self.character.stopped_moving:
                 self.character.stopped_moving = False
-                self.enemy.user_node = self.character.node
+                self.enemy.user_node = self.character.current_node
                 self.calculate_enemy_path()
                 self.make_new_text_sprites()
                 self.scoreboard.update_scoreboard()
                     
-            if pygame.sprite.collide_rect(self.enemy, self.character):
+            if self.enemy.current_node == self.character.current_node:
                 # self.music.stop()
                 return "GameSummary", self.scoreboard.score
             
@@ -248,11 +251,11 @@ class TypingGame():
 
 class TypingTest(): 
     def __init__(self): 
-        self.text_object = TypeTestText()
+        self.text_object = TestText()
 
 
-    def main_loop(self, screen, background): 
-        clock = pygame.time.Clock()
+    def main_loop(self, screen, background, clock): 
+        """main python loop which allows user to play game"""
         start_time = time.time()
         while True:
             clock.tick(60)
