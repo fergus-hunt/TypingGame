@@ -3,23 +3,24 @@ import pygame
 pygame.init()
 
 
+
 class MainCharacter(pygame.sprite.Sprite):
     """Class to represent the user character"""
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+        self.current_node = "17"
 
 
-        self.image = pygame.transform.scale(pygame.image.load("../images/blue-devout/devouted-back/tile000.png"),
+        self.image = pygame.transform.scale(pygame.image.load("./images/blue-devout/devouted-back/tile000.png"),
                                             (80, 80))
         self.rect = self.image.get_rect()
-
-        self.current_node = "17"
-        self.animations = []
         self.rect.center = (653, 749)
-        self.stopped_moving = False
-        self.animation_index = 0
+
+        self.animations = []
         self.next_positions = []  # implementing a stack
+        self.animation_index = 0
+        self.stopped_moving = False
 
     def update(self):
         """Updates the character to the new position"""
@@ -39,27 +40,25 @@ class MainCharacter(pygame.sprite.Sprite):
 
     def movement_steps(self, next_node, next_position):
         """calculates the user next steps based on there current node and their next one"""
-        current_position = self.rect.center
         self.current_node = next_node
-        x_denoms = (next_position[0] - current_position[0]) / 6
-        y_denoms = (next_position[1] - current_position[1]) / 6
-        if (abs(x_denoms)) > abs(y_denoms):
-            if x_denoms < 0:
+        x_steps = (next_position[0] - self.rect.center[0]) / 6
+        y_steps = (next_position[1] - self.rect.center[1]) / 6
+        if (abs(x_steps)) > abs(y_steps):
+            if x_steps < 0:
                 self.get_animations("left")
             else:
                 self.get_animations("right")
         else:
-            if y_denoms < 0:
+            if y_steps < 0:
                 self.get_animations("back")
             else:
                 self.get_animations("forward")
         for i in range(1, 7):
-            next_pos = ((i * x_denoms) + current_position[0], (i * y_denoms) + current_position[1])
+            next_pos = ((i * x_steps) + self.rect.center[0], (i * y_steps) + self.rect.center[1])
             self.next_positions.append(next_pos)
 
     def get_animations(self, direction):
-
-        path = f"../images/blue-devout/devouted-{direction}/"
-        for i in range(3):
+        path = f"./images/blue-devout/devouted-{direction}/"
+        for i in range(3):  # could make this better for enemies (inheritance?)
             image = pygame.transform.scale(pygame.image.load(f"{path}tile00{i}.png"), (80, 80))
             self.animations.append(image)

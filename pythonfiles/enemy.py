@@ -11,9 +11,9 @@ class Enemy(pygame.sprite.Sprite):
         self.current_node = "0"
         self.next_node = "1"
         self.path = []
+        self.movement_speed = 20
         self.next_positions = []
 
-        self.movement_speed = 20
         self.animations = []
         self.get_animations("right")
         self.animation_index = 0
@@ -23,13 +23,13 @@ class Enemy(pygame.sprite.Sprite):
 
     def get_animations(self, direction):
         """Loads the images files into pygame surfaces stored in a attribute array"""
-        path = f"../images/enemy-skeleton/skeleton-{direction}/"
+        path = f"./images/enemy-skeleton/skeleton-{direction}/"
         for i in range(12):
             if i >= 10:
-                image = pygame.transform.scale(pygame.image.load(f"{path}tile0{i}.png"), (192, 192))
+                temp_image = pygame.transform.scale(pygame.image.load(f"{path}tile0{i}.png"), (192, 192))
             else:
-                image = pygame.transform.scale(pygame.image.load(f"{path}tile00{i}.png"), (192, 192))
-            self.animations.append(image)
+                temp_image = pygame.transform.scale(pygame.image.load(f"{path}tile00{i}.png"), (192, 192))
+            self.animations.append(temp_image)
 
     def update(self):
         """Updates the enemies position and animation"""
@@ -51,20 +51,20 @@ class Enemy(pygame.sprite.Sprite):
         """Divides enemy movement between the current and the next node"""
         current_position = self.df['positions'][f"{self.current_node}"]
         next_position = self.df['positions'][f"{self.next_node}"]
-        x_denoms = (next_position[0] - current_position[0]) / self.movement_speed
-        y_denoms = (next_position[1] - current_position[1]) / self.movement_speed
+        x_steps = (next_position[0] - current_position[0]) / self.movement_speed
+        y_steps = (next_position[1] - current_position[1]) / self.movement_speed
 
-        if (abs(x_denoms)) > abs(y_denoms):
-            if x_denoms < 0:
+        if (abs(x_steps)) > abs(y_steps):
+            if x_steps < 0:
                 self.get_animations("left")
             else:
                 self.get_animations("right")
         else:
-            if y_denoms < 0:
+            if y_steps < 0:
                 self.get_animations("right")
             else:
                 self.get_animations("left")
 
         for i in range(1, self.movement_speed + 1):
-            next_pos = (round((i * x_denoms) + current_position[0], 2), round((i * y_denoms) + current_position[1], 2))
-            self.next_positions.append(next_pos)
+            next_position = (round((i * x_steps) + current_position[0], 2), round((i * y_steps) + current_position[1], 2))
+            self.next_positions.append(next_position)
