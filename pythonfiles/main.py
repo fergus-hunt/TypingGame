@@ -2,6 +2,7 @@ import json, pygame
 from pygame import freetype
 
 from database_manager import DatabaseManager
+from user_manager import UserManager
 from test_summary_menu import TestSummaryMenu
 from game_summary_menu import GameSummaryMenu
 from main_menu import MainMenu
@@ -13,10 +14,10 @@ freetype.init()
 
 data_manager = DatabaseManager()
 
-# Login = AuthenticateUser(database_manager=DatabaseManager)
-# Login.log_in_user()
-# Login.root.mainloop()
-# USERNAME = Login.username
+Login = UserManager(database_manager=DatabaseManager)
+Login.log_in_user()
+Login.root.mainloop()
+USERNAME = Login.username
 
 USERNAME = "Fergus"
 

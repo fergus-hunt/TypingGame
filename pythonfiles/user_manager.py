@@ -1,4 +1,4 @@
-import tkinter
+import tkinter, hashlib
 from tkinter import messagebox
 
 
@@ -43,7 +43,7 @@ class UserManager():
             count += 1
             user = users[count]
             if username == user[0]:
-                if user[1] == password:
+                if user[1] == hashlib.sha256(password.encode("utf-8")).hexdigest():
                     messagebox.showinfo(message='working')
                     self.root.destroy()
                     not_found = False

@@ -1,5 +1,4 @@
-import datetime
-import sqlite3
+import datetime, hashlib, sqlite3
 
 
 # get uesr log in - to confirm
@@ -22,9 +21,10 @@ class DatabaseManager():
         return database_information.fetchall()
 
     def create_new_user(self, username, password, email):
+        userhash = (hashlib.sha256(password.encode("utf-8")).hexdigest())
         with sqlite3.connect("database/app_data.db") as con:
             cur = con.cursor()
-            cur.execute(f"INSERT INTO user_information VALUES ('{username}', '{password}', '{email}')")
+            cur.execute(f"INSERT INTO user_information VALUES ('{username}', '{userhash}', '{email}')")
             con.commit()
 
     def upload_game_score(self, username, score):
