@@ -1,5 +1,4 @@
 import pygame
-
 from pygame import freetype
 
 pygame.init()
