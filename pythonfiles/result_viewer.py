@@ -7,7 +7,8 @@ class ResultViewer(tkinter.Tk):
     def __init__(self, userResults):
         tkinter.Tk.__init__(self, "User Results")
         self.geometry("620x200")
-        self.graph = ttk.Treeview(master=self, columns=('result', 'time'), show='headings')
+        self.graph = ttk.Treeview(master=self, columns=("username", 'result', 'time'), show='headings')
+        self.graph.heading("username", text="User")
         self.graph.heading('result', text='Result')
         self.graph.heading('time', text="Date")
 

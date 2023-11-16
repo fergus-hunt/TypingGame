@@ -1,50 +1,47 @@
 import datetime, hashlib, sqlite3
 
 
-# get uesr log in - to confirm
-# create user accoutns 
-# store user typign runs (error count, wpm)
-# only store and retrieve data, no calculations or anything
-# app_data.db (user_information, typing_runs)
+def get_username_password(self):
+    with sqlite3.connect("database/app_data.db") as con:
+        cur = con.cursor()
+        database_information = cur.execute("""SELECT username, password 
+                                    FROM user_information""")
+    return database_information.fetchall()
 
+def create_new_user( username, password, email):
+    userhash = (hashlib.sha256(password.encode("utf-8")).hexdigest())
+    with sqlite3.connect("database/app_data.db") as con:
+        cur = con.cursor()
+        cur.execute(f"INSERT INTO user_information VALUES ('{username}', '{userhash}', '{email}')")
+        con.commit()
 
-# table scores = game_scores
-class DatabaseManager():
-    def ___init__(self) -> None:
-        self.path = "./database/app_data.db"
+def upload_game_score( username, score):
+    date = datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+    with sqlite3.connect("database/app_data.db") as con:
+        cur = con.cursor()
+        cur.execute(f"""
+            INSERT INTO game_scores VALUES ('{username}', '{score}', '{date}')""")
+        con.commit()
 
-    def get_username_password(self):
-        with sqlite3.connect("database/app_data.db") as con:
-            cur = con.cursor()
-            database_information = cur.execute("""SELECT username, password 
-                                        FROM user_information""")
-        return database_information.fetchall()
+def upload_test_score( username, wpm, errors):
+    date = datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+    with sqlite3.connect("database/app_data.db") as con:
+        cur = con.cursor()
+        cur.execute(f"""INSERT INTO test_scores VALUES ('{username}', '{wpm}', '{errors}', '{date}')""")
+        con.commit()
 
-    def create_new_user(self, username, password, email):
-        userhash = (hashlib.sha256(password.encode("utf-8")).hexdigest())
-        with sqlite3.connect("database/app_data.db") as con:
-            cur = con.cursor()
-            cur.execute(f"INSERT INTO user_information VALUES ('{username}', '{userhash}', '{email}')")
-            con.commit()
+def get_user_game_scores( username):
+    with sqlite3.connect("database/app_data.db") as con:
+        cur = con.cursor()
+        info = cur.execute(f"""SELECT username, score, date FROM game_scores WHERE username='{username}';""")
 
-    def upload_game_score(self, username, score):
-        date = datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
-        with sqlite3.connect("database/app_data.db") as con:
-            cur = con.cursor()
-            cur.execute(f"""
-                INSERT INTO game_scores VALUES ('{username}', '{score}', '{date}')""")
-            con.commit()
+    return info.fetchall()
 
-    def upload_test_score(self, username, wpm, errors):
-        date = datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
-        with sqlite3.connect("database/app_data.db") as con:
-            cur = con.cursor()
-            cur.execute(f"""INSERT INTO test_scores VALUES ('{username}', '{wpm}', '{errors}', '{date}')""")
-            con.commit()
+def get_user_test_scores( username):
+    with sqlite3.connect("database/app_data.db") as con:
+        cur = con.cursor()
+        info = cur.execute(f"""SELECT username, words_per_minute, errors, date FROM test_scores WHERE username='{username}';""")
 
-    def get_user_scores(self):
-        with sqlite3.connect("database/app_data.db") as con:
-            cur = con.cursor()
-            info = cur.execute(f"""SELECT  score, date FROM game_scores""")
+    return info.fetchall()
+    
 
-        return info.fetchall()

@@ -5,7 +5,7 @@ import string
 
 pygame.init()
 
-FONT = pygame.freetype.Font(None, 50)
+FONT = pygame.freetype.Font(".\\images\\scary_font.ttf", 30)
 FONT.origin = True
 
 API_TOKEN = "TfYf279t3YTCMftnoaNsg23Zbi13H5xblBHvu4yw"

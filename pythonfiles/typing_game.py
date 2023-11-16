@@ -8,7 +8,7 @@ from scoreboard import ScoreBoard
 pygame.init()
 freetype.init()     
 
-FONT = freetype.Font(None, 50)
+FONT = freetype.Font(".\\images\\scary_font.ttf", 50)
 HEIGHT = 965
 WIDTH = 1285
 
@@ -66,9 +66,12 @@ class TypingGame:
 
             node = visited[str(self.character.current_node)]
             temporary_node = node[1]
-
+            if not temporary_node: 
+                return "GameSummary", self.scoreboard.score
+            
             path = [self.character.current_node, node[1]]
             while temporary_node != self.enemy.next_node and self.enemy.current_node != self.character.current_node:
+                
                 path.append(visited[str(temporary_node)][1])
                 temporary_node = visited[temporary_node][1]
 
