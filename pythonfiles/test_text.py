@@ -6,7 +6,7 @@ import time
 pygame.init()
 pygame.mixer.init()
 
-FONT = pygame.freetype.Font(None, 50)
+FONT = pygame.freetype.Font(".\\images\\scary_font.ttf", 50)
 FONT.origin = True
 HEIGHT = 965
 WIDTH = 1285
