@@ -117,7 +117,3 @@ class UserManager():
             self.log_in_user()
 
 
-fergusTest = UserManager()
-fergusTest.log_in_user()
-
-fergusTest.root.mainloop()
