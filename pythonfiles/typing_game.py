@@ -19,7 +19,7 @@ class TypingGame:
         self.df = graph
 
         self.character = MainCharacter()
-        self.enemy = Enemy(graph)
+        self.enemy = Enemy()
         self.scoreboard = ScoreBoard()
 
         self.game_sprites.add(self.character)
@@ -137,6 +137,10 @@ class TypingGame:
                 self.calculate_enemy_path()
                 self.make_new_text_sprites()
                 self.scoreboard.update_scoreboard()
+
+            if self.enemy.stopped_moving:
+                self.enemy.stopped_moving = False
+                self.enemy.movement_steps(self.df["positions"][f"{self.enemy.next_node}"])
 
             if self.enemy.current_node == self.character.current_node:
                 # self.music.stop()

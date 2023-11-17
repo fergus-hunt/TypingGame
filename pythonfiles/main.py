@@ -6,9 +6,6 @@ from result_viewer import ResultViewer
 from menu import Menu
 from button import Button
 from user_manager import UserManager
-from test_summary_menu import TestSummaryMenu
-from game_summary_menu import GameSummaryMenu
-from main_menu import MainMenu
 from typing_test import TypingTest
 from typing_game import TypingGame
 
@@ -17,10 +14,10 @@ freetype.init()
 
 
 
-# Login = UserManager(database_manager=DatabaseManager)
-# Login.log_in_user()
-# Login.root.mainloop()
-# USERNAME = Login.username
+Login = UserManager()
+Login.log_in_user()
+Login.root.mainloop()
+USERNAME = Login.username
 
 USERNAME = "Fergus"
 
@@ -35,7 +32,7 @@ MENUBACKGROUND = pygame.transform.scale(pygame.image.load(".\\images\\background
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 
 
-# all_texts = pygame.sprite.Group()
+# all_texts = pygame.sprite.Group(
 
 with open("./database/graph.json") as file:
     graph = json.loads(file.read())
@@ -63,11 +60,19 @@ while True:
         upload_test_score(USERNAME, words_per_minute, errors)
     elif scene == "TestSummary":
         # return wpm, errors and statistics 
-        test_summary = TestSummaryMenu(words_per_minute, errors)
+        # test_summary = TestSummaryMenu(words_per_minute, errors)
+        test_summary = Menu()
+        test_summary.add_title(Button(f"WPM : {words_per_minute}", WIDTH / 2, (HEIGHT/2)))
+        test_summary.add_title(Button(f"ERRORS : {errors}", WIDTH / 2, HEIGHT/4))
+        test_summary.add_button("TypingTest", Button("Play Again", WIDTH / 2, 0.75 * HEIGHT))
         scene = test_summary.main_loop(WIN, MENUBACKGROUND, CLOCK)
     elif scene == "GameSummary":
         # return score, record high score. 
-        game_summary = GameSummaryMenu(score=typing_game.scoreboard.score)
+        # game_summary = GameSummaryMenu(score=typing_game.scoreboard.score)
+        game_summary = Menu()
+        game_summary.add_title(Button(f"Score : {score}", WIDTH / 2, (HEIGHT*0.75)))
+        game_summary.add_button("StartMenu", Button(f"Main Menu", WIDTH / 2, HEIGHT/2))
+        game_summary.add_button("TypingGame", Button("Play again", WIDTH / 2, 0.25 * HEIGHT))
         scene = game_summary.main_loop(WIN, MENUBACKGROUND, CLOCK)
     elif scene == "ResultViewer":
         userresult = get_user_game_scores(USERNAME)
