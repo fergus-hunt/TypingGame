@@ -20,6 +20,12 @@ class Menu:
         # self.stats_surface, self.stats_button = FONT.render("View Stats", 'blue')
         # self.test_surface, self.test_button = FONT.render("Take Test", "blue")
     
+    def add_button(self, command, button): 
+        self.button_dict[command] = button
+
+    def add_title(self, title): 
+        self.title_array.append(title)
+    
 
     def main_loop(self, screen, background, clock):
         """Main pygame loop, shows buttons to play game, take the test and view user statistics"""
