@@ -3,6 +3,8 @@ from pygame import freetype
 
 from database_manager import *
 from result_viewer import ResultViewer
+from menu import Menu
+from button import Button
 from user_manager import UserManager
 from test_summary_menu import TestSummaryMenu
 from game_summary_menu import GameSummaryMenu
@@ -45,7 +47,11 @@ CLOCK = pygame.time.Clock()
 
 while True:
     if scene == 'StartMenu':
-        start_menu = MainMenu()
+        start_menu = Menu()
+        start_menu.add_button("TypingGame", Button("Play Game", WIDTH/2, HEIGHT * 0.25))
+        start_menu.add_button("TypingTest", Button( "Take Test", WIDTH / 2, HEIGHT / 2))
+        start_menu.add_button("ResultViewer", Button("View Stats", WIDTH / 2, 0.75 * HEIGHT))
+        
         scene = start_menu.main_loop(WIN, MENUBACKGROUND, CLOCK)
     elif scene == "TypingGame":
         typing_game = TypingGame(graph)

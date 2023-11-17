@@ -1,7 +1,7 @@
 import datetime, hashlib, sqlite3
 
 
-def get_username_password(self):
+def get_username_password():
     with sqlite3.connect("database/app_data.db") as con:
         cur = con.cursor()
         database_information = cur.execute("""SELECT username, password 

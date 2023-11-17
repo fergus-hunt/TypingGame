@@ -1,5 +1,4 @@
 import tkinter, hashlib
-import pyglet
 
 from tkinter.ttk import *
 from tkinter import *
@@ -74,18 +73,23 @@ class UserManager():
         if kwargs.get('previous_frame'):
             previous_frame = kwargs.get('previous_frame')
             previous_frame.destroy()
-        create_account_frame = tkinter.Frame(self.root, name="create_user_frame")
+        create_account_frame = tkinter.Frame(self.root, name="create_user_frame", pady=20, bg="blue")
+        create_account_frame.grid_columnconfigure(0, weight=1)
+        create_account_frame.grid_columnconfigure(1, weight=1)
+
+        create_account_title = tkinter.Label(master=create_account_frame, text="CREATE ACCOUNT", font =("Ravie", 10, "bold"), bg="blue")
+        create_account_title.grid(column=0, row=0, columnspan=1)
 
         log_in_path = tkinter.Button(create_account_frame, text="Log in",command=lambda: self.log_in_user(previous_frame=create_account_frame))
-        log_in_path.grid(column=0, row=0)
+        log_in_path.grid(column=1, row=1)
 
         username_create_entry = tkinter.Entry(create_account_frame)
         username_create_entry.insert(string="username", index=tkinter.END)
         username_create_entry.grid(column=0, row=1)
 
-        full_name_create_entry = tkinter.Entry(create_account_frame)
-        full_name_create_entry.insert(string="Full Name", index=tkinter.END)
-        full_name_create_entry.grid(column=0, row=2)
+        email_entry = tkinter.Entry(create_account_frame)
+        email_entry.insert(string="email", index=tkinter.END)
+        email_entry.grid(column=0, row=2)
 
         password_create_entry = tkinter.Entry(create_account_frame)
         password_create_entry.insert(string="Password", index=tkinter.END)
@@ -94,10 +98,10 @@ class UserManager():
         submit_new_account = tkinter.Button(create_account_frame, text="Submit", 
                                             command=lambda: self.new_create_user_record(
                                                 username_create_entry.get(), password_create_entry.get(),
-                                                full_name_create_entry.get(), create_account_frame
+                                                email_entry.get(), create_account_frame
                                             ))
-        submit_new_account.grid(column=1, row=1, rowspan=2)
-        create_account_frame.grid(column=0, row=1)
+        submit_new_account.grid(column=0, row=4)
+        create_account_frame.pack(fill=BOTH ,expand=1)
 
     def new_create_user_record(self, username, password, email, old_frame):
         """Inputs the new user account in the database, then returns the window that allows them to login"""
