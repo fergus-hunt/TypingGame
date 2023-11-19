@@ -69,15 +69,18 @@ class TestText:
         # coudl make quicker here.
         for index, metric in zip(range(len(self.characters_unicode)), self.metrics):
             character = self.characters_unicode[index]
-            if self.characters_completed[index] == "Na":
+            if not self.characters_completed[index]:
+                FONT.render_to(text_surface, (x_val, self.baseline), character, "red")
+                x_val += metric[4]
+                completed += metric[4]
+            elif (not self.characters_completed[index-1] == "Na") and self.characters_completed[index] == "Na" and index != 0: 
+                FONT.render_to(text_surface, (x_val, self.baseline), character, "blue")
+                x_val += metric[4] 
+            elif self.characters_completed[index] == "Na":
                 FONT.render_to(text_surface, (x_val, self.baseline), character, 'white')
                 x_val += metric[4]
             elif self.characters_completed[index]:
                 FONT.render_to(text_surface, (x_val, self.baseline), character, "green")
-                x_val += metric[4]
-                completed += metric[4]
-            elif not self.characters_completed[index]:
-                FONT.render_to(text_surface, (x_val, self.baseline), character, "red")
                 x_val += metric[4]
                 completed += metric[4]
 

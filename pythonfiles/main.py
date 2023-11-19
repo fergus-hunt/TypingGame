@@ -14,10 +14,10 @@ freetype.init()
 
 
 
-Login = UserManager()
-Login.log_in_user()
-Login.root.mainloop()
-USERNAME = Login.username
+# Login = UserManager()
+# Login.log_in_user()
+# Login.root.mainloop()
+# USERNAME = Login.username
 
 USERNAME = "Fergus"
 
