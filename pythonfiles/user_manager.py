@@ -43,14 +43,14 @@ class UserManager():
         create_account_path.grid(column=1, row=2)
 
 
-        submit_log_in = tkinter.Button(user_log_in_frame, text="Submit", command=lambda: self.authenticate_old_user(
+        submit_log_in = tkinter.Button(user_log_in_frame, text="Submit", command=lambda: self.authenticate_user(
             username_log_in_entry.get(), password_log_in_entry.get()
         ))
 
         submit_log_in.grid(column=0, row=3)
         user_log_in_frame.pack(expand=1, fill=BOTH)
 
-    def authenticate_old_user(self, username, password):
+    def authenticate_user(self, username, password):
         """Function to check user input matches the user stored in the database, then exits window"""
         users = get_username_password()
         not_found = True
