@@ -18,7 +18,7 @@ class GameText(pygame.sprite.Sprite):
     def __init__(self, x, y, node) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.text = ""
-        self.generate_text()
+        self.get_text()
         self.rect = FONT.get_rect(self.text)
         self.metrics = FONT.get_metrics(self.text)
         self.next_key = 0
@@ -38,7 +38,7 @@ class GameText(pygame.sprite.Sprite):
         for index in range(len(self.characters_completed)):
             self.characters_completed[index] = "Na"
 
-    def generate_text(self):
+    def get_text(self):
         """Generate the new text for object. """
         self.text = ""
         for i in range(2):
