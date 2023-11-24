@@ -30,9 +30,6 @@ class TestText:
         self.rect.center = (WIDTH / 2, HEIGHT / 2)
 
     def get_text(self):
-        # pd = pandas.read_csv('database\data.csv')
-        # text_index = random.randint(0, len(pd)-1)
-        # text = pd.loc[text_index]
         response = requests.get(URL)
         response.raise_for_status()
 
