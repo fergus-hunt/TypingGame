@@ -4,15 +4,14 @@ from game_entity import GameEntity
 
 class Enemy(GameEntity):
     def __init__(self): 
-        GameEntity.__init__(self, f"./images/enemy-skeleton/skeleton", "0", (177,504), 20)
-        self.next_node = "1"
+        GameEntity.__init__(self, f"./images/enemy-skeleton/skeleton", "1", (177,504), 20)
         self.path = []
         self.stopped_moving = True
 
     def movement_steps(self, next_position):
-        self.current_node = self.path[-1]
-        self.next_node = self.path[-2]
-        del self.path[-1]
+        # del self.path[-1]
+        # self.current_node = self.next_node
+        # self.next_node = self.path[-1]
         """calculates the user next steps based on there current node and their next one"""
         # self.current_node = self.next_node
         x_steps = (next_position[0] - self.rect.center[0]) / self.movement_speed
