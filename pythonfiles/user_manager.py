@@ -43,30 +43,29 @@ class UserManager():
         create_account_path.grid(column=1, row=2)
 
 
-        submit_log_in = tkinter.Button(user_log_in_frame, text="Submit", command=lambda: self.authenticate_user(
+        submit_log_in = tkinter.Button(user_log_in_frame, text="Submit", command=lambda: self.authenticate_old_user(
             username_log_in_entry.get(), password_log_in_entry.get()
         ))
 
         submit_log_in.grid(column=0, row=3)
         user_log_in_frame.pack(expand=1, fill=BOTH)
 
-    def authenticate_user(self, username, password):
+    def authenticate_old_user(self, username, password):
         """Function to check user input matches the user stored in the database, then exits window"""
-        users = get_username_password()
-        not_found = True
-        count = -1
-        while not_found and count < len(users) - 1:
-            count += 1
-            user = users[count]
-            if username == user[0]:
-                if user[1] == hashlib.sha256(password.encode("utf-8")).hexdigest():
-                    tkinter.messagebox.showinfo(message='working')
-                    self.root.destroy()
-                    not_found = False
-        if not_found:
-            tkinter.messagebox.showinfo(message='verification failed')
-        else:
-            self.username = username
+        user_data = get_username_password(username)
+        try:
+            user_password = get_username_password(username)[0][1]
+            if user_password == hashlib.sha256(password.encode("utf-8")).hexdigest(): 
+                tkinter.messagebox.showinfo(message='working')
+                self.username = username
+                self.root.destroy()
+            else:
+                tkinter.messagebox.showinfo(message='Password is incorrect')
+        except IndexError: 
+            tkinter.messagebox.showinfo(message="Username not found")
+
+
+            
 
     def creating_user_frame(self, **kwargs):
         """Tkinter window to allow user to create a new account"""
@@ -105,15 +104,15 @@ class UserManager():
 
     def new_create_user_record(self, username, password, email, old_frame):
         """Inputs the new user account in the database, then returns the window that allows them to login"""
-        users_database = get_username_password()
-        usernames = [username for username, password in users_database]
-
-        if username in usernames:
-            tkinter.messagebox.showinfo(message='Already username')
-        else:
+        users_database = get_username_password(username)
+        if len(users_database) == 0: 
             create_new_user(username, password, email)
             tkinter.messagebox.showinfo("Account Created")
             old_frame.destroy()
             self.log_in_user()
+
+        else:
+            tkinter.messagebox.showinfo(message='Already username')
+            
 
 
