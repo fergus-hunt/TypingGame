@@ -25,8 +25,8 @@ USERNAME = "Fergus"
 pygame.init()
 HEIGHT = 965
 WIDTH = 1285
-FONT = freetype.Font(".\\images\\scary_font.ttf", 30)
-FONT.origin = True
+# FONT = freetype.Font(".\\images\\scary_font.ttf", 30)
+# FONT.origin = True
 MainThread = threading.current_thread()
 # MainThread.start()
 
@@ -50,6 +50,10 @@ def make_result_thread(columns, results, thread):
     
 # get a new font.
 CLOCK = pygame.time.Clock()
+
+    
+
+
 
 while True:
     if scene == 'StartMenu':
@@ -96,6 +100,3 @@ while True:
         result_thread = threading.Thread()
         result_thread = threading.Thread(target=make_result_thread, kwargs={"columns": ("username", "score", "Date"), "results":game_scores, "thread":result_thread})
         result_thread.start()
-
-        # show_results(("username", "score", "Date"),game_scores)
-        # results = ResultViewer(("username", "score", "Date"),game_scores)

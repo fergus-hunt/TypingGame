@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, time
 from game_text import GameText
 from pygame import freetype
 from enemy import Enemy
@@ -48,7 +48,7 @@ class TypingGame:
             for node in self.df['distances'].keys():
                 unvisited[node] = [sys.maxsize, None]
 
-            current_node = self.enemy.next_node
+            current_node = self.enemy.current_node
             unvisited[f"{current_node}"] = [0, None]
 
             while len(unvisited) > 0:
@@ -70,7 +70,7 @@ class TypingGame:
                 return "GameSummary", self.scoreboard.score
             
             path = [self.character.current_node, node[1]]
-            while temporary_node != self.enemy.next_node and self.enemy.current_node != self.character.current_node:
+            while str(temporary_node)!= str(self.enemy.current_node) and self.enemy.current_node != self.character.current_node:
                 
                 path.append(visited[str(temporary_node)][1])
                 temporary_node = visited[temporary_node][1]
@@ -78,6 +78,7 @@ class TypingGame:
             # print(f"Enemy path: {path}")
             # print(f"Current node : {self.enemy.current_node}")
             # print(f"Next node : {self.enemy.next_node}")
+            del path[-1]
             self.enemy.path = path
 
     def register_key(self, event):
@@ -117,6 +118,7 @@ class TypingGame:
     def main_loop(self, screen, background, clock):
         """Main pygame loop where the user plays the game"""
         self.calculate_enemy_path()
+        self.enemy.movement_steps(self.df["positions"][f"{self.enemy.current_node}"])
         # self.music.play()
         entity_update_rate = 0
         while True:
@@ -140,7 +142,12 @@ class TypingGame:
 
             if self.enemy.stopped_moving:
                 self.enemy.stopped_moving = False
-                self.enemy.movement_steps(self.df["positions"][f"{self.enemy.next_node}"])
+                self.enemy.current_node = self.enemy.path[-1]
+                del self.enemy.path[-1]
+                self.enemy.movement_steps(self.df["positions"][f"{self.enemy.current_node}"])
+                print(f"path = {self.enemy.path}")
+                print(f"Current node : {self.enemy.current_node}")
+
 
             if self.enemy.current_node == self.character.current_node:
                 # self.music.stop()

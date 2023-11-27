@@ -1,11 +1,13 @@
 import datetime, hashlib, sqlite3
 
 
-def get_username_password():
+def get_username_password(username):
     with sqlite3.connect("database/app_data.db") as con:
         cur = con.cursor()
-        database_information = cur.execute("""SELECT username, password 
-                                    FROM user_information""")
+        database_information = cur.execute(f"""SELECT username, password 
+                                    FROM user_information WHERE username='{username}';""")
+
+    print(database_information)
     return database_information.fetchall()
 
 def create_new_user( username, password, email):
