@@ -4,8 +4,8 @@ from test_text import TestText
 pygame.init()
 
 class TypingTest:
-    def __init__(self):
-        self.text_object = TestText()
+    def __init__(self, feature_control):
+        self.text_object = TestText(feature_control)
 
     def main_loop(self, screen, background, clock):
         """main python loop which allows user to play game"""
@@ -21,7 +21,6 @@ class TypingTest:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                 elif event.type == pygame.KEYDOWN:
-                    self.text_object.noise.play()
                     self.text_object.register_key(event)
             self.text_object.rendering_text()
             screen.fill("black")
