@@ -8,19 +8,20 @@ from scoreboard import ScoreBoard
 pygame.init()
 freetype.init()     
 
-FONT = freetype.Font(".\\images\\scary_font.ttf", 50)
+# FONT = freetype.Font(".\\images\\scary_font.ttf", 50)
 HEIGHT = 965
 WIDTH = 1285
 
 
 class TypingGame:
-    def __init__(self, graph) -> None:
+    def __init__(self, graph, feature_control) -> None:
+        self.feature_control =feature_control
         self.game_sprites = pygame.sprite.Group()
         self.df = graph
 
         self.character = MainCharacter()
         self.enemy = Enemy()
-        self.scoreboard = ScoreBoard()
+        self.scoreboard = ScoreBoard(feature_control)
 
         self.game_sprites.add(self.character)
         self.game_sprites.add(self.enemy)
@@ -31,12 +32,11 @@ class TypingGame:
         self.make_new_text_sprites()
 
         # self.music = pygame.mixer.Sound("images/game_music.mp3")
-        self.key_noise = pygame.mixer.Sound('./images/typewriter.wav')
 
     def alert(self, screen):
         """shows the current round within pygame screen"""
         if self.scoreboard.score % 100 == 0:
-            alert_image, alert_rect = FONT.render(f"Round {self.scoreboard.score}")
+            alert_image, alert_rect = self.feature_control.font_dynamic.render(f"Round {self.scoreboard.score}")
             alert_rect.center = (WIDTH / 2, HEIGHT / 5)
             screen.blit(alert_image, alert_rect)
 
@@ -113,12 +113,13 @@ class TypingGame:
                      self.df['distances'][f"{self.character.current_node}"]]
         self.text_sprites.empty()
         for position in positions:
-            self.text_sprites.add(GameText(position[0], position[1], position[2]))
+            self.text_sprites.add(GameText(position[0], position[1], position[2], self.feature_control))
 
     def main_loop(self, screen, background, clock):
         """Main pygame loop where the user plays the game"""
         self.calculate_enemy_path()
         self.enemy.movement_steps(self.df["positions"][f"{self.enemy.current_node}"])
+        self.feature_control.music.play()
         # self.music.play()
         entity_update_rate = 0
         while True:
@@ -130,7 +131,7 @@ class TypingGame:
                     pygame.quit()
 
                 elif event.type == pygame.KEYDOWN and len(self.character.next_positions) == 0:
-                    self.key_noise.play()
+                    self.feature_control.keysound.play()
                     self.register_key(event)
 
             if self.character.stopped_moving:

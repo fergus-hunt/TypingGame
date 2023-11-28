@@ -1,0 +1,23 @@
+{
+    "Font":{
+        "Scary":".\\images\\font\\scary_font.ttf", 
+        "Weird":".\\images\\font\\weird.ttf", 
+        "Agh":".\\images\\font\\scary_fon.ttf"
+    },
+    "Keysound":{
+        "Typewrite":".\\images\\keysound\\typewriter.wav",
+        "Beep":".\\images\\keysound\\beep.wav",
+        "golf":".\\images\\keysound\\golf.wav", 
+        "Shot":".\\images\\keysound\\shot.mp3"
+    }, 
+    "Colour":{
+        "Blue":"Blue",
+        "Red":"Red", 
+        "Yellow":"Yellow"
+    },
+    "Music":{
+        "Daft":".\\images\\music\\daft.mp3",
+        "Epic":".\\images\\music\\epic.mp3",
+        "Hitman":".\\images\\music\\hitman.mp3"
+    }
+}
