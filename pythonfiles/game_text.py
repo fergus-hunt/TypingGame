@@ -5,8 +5,8 @@ import string
 
 pygame.init()
 
-FONT = pygame.freetype.Font(".\\images\\scary_font.ttf", 30)
-FONT.origin = True
+# FONT = pygame.freetype.Font(".\\images\\scary_font.ttf", 30)
+# FONT.origin = True
 
 API_TOKEN = "TfYf279t3YTCMftnoaNsg23Zbi13H5xblBHvu4yw"
 URL = f"https://quotes.rest/qod.json?api_key={API_TOKEN}"
@@ -15,12 +15,13 @@ URL = f"https://quotes.rest/qod.json?api_key={API_TOKEN}"
 class GameText(pygame.sprite.Sprite):
     """renders new text, takes user key presses, analyses data"""
 
-    def __init__(self, x, y, node) -> None:
+    def __init__(self, x, y, node, feature_control) -> None:
         pygame.sprite.Sprite.__init__(self)
+        self.feature_control = feature_control
         self.text = ""
         self.get_text()
-        self.rect = FONT.get_rect(self.text)
-        self.metrics = FONT.get_metrics(self.text)
+        self.rect = self.feature_control.font_static.get_rect(self.text)
+        self.metrics = self.feature_control.font_static.get_metrics(self.text)
         self.next_key = 0
         self.characters_unicode = [character for character in self.text]
         self.characters_completed = ["Na" for index in range(len(self.characters_unicode))]
@@ -53,11 +54,11 @@ class GameText(pygame.sprite.Sprite):
         for index, metric in zip(range(len(self.characters_unicode)), self.metrics):
             character = self.characters_unicode[index]
             if self.characters_completed[index] == "Na":
-                FONT.render_to(self.image, (x_val, self.baseline), character, 'white')
+                self.feature_control.font_static.render_to(self.image, (x_val, self.baseline), character, 'white')
                 x_val += metric[4]
             elif self.characters_completed[index]:
-                FONT.render_to(self.image, (x_val, self.baseline), character, "green")
+                self.feature_control.font_static.render_to(self.image, (x_val, self.baseline), character, "green")
                 x_val += metric[4]
             else:
-                FONT.render_to(self.image, (x_val, self.baseline), character, "red")
+                self.feature_control.font_static.render_to(self.image, (x_val, self.baseline), character, "red")
                 x_val += metric[4]

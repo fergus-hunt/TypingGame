@@ -8,7 +8,9 @@ from button import Button
 from user_manager import UserManager
 from typing_test import TypingTest
 from typing_game import TypingGame
+from feature_control import FeatureControl
 import threading
+from settings import Settings
 
 pygame.init()
 freetype.init()
@@ -53,40 +55,41 @@ CLOCK = pygame.time.Clock()
 
     
 
-
+FEATURE_CONTROL = FeatureControl()
 
 while True:
     if scene == 'StartMenu':
         start_menu = Menu()
-        start_menu.add_button("TypingGame", Button("Play Game", WIDTH/2, HEIGHT * 0.25))
-        start_menu.add_button("TypingTest", Button( "Take Test", WIDTH / 2, HEIGHT / 2))
-        start_menu.add_button("ResultViewerTest", Button("View Test Stats", WIDTH*2/3, 0.75 * HEIGHT))
-        start_menu.add_button("ResultViewerGame", Button("View Game Stats", WIDTH / 3, 0.75 * HEIGHT))
+        start_menu.add_button("TypingGame", Button("Play Game", WIDTH/2, HEIGHT * 0.25, FEATURE_CONTROL))
+        start_menu.add_button("TypingTest", Button( "Take Test", WIDTH / 2, HEIGHT / 2, FEATURE_CONTROL))
+        start_menu.add_button("ResultViewerTest", Button("View Test Stats", WIDTH*2/3, 0.75 * HEIGHT, FEATURE_CONTROL))
+        start_menu.add_button("ResultViewerGame", Button("View Game Stats", WIDTH / 3, 0.75 * HEIGHT, FEATURE_CONTROL))
+        start_menu.add_button("ChangeSettings", Button("ChangeSettings", WIDTH *2/3, 0.5 * HEIGHT, FEATURE_CONTROL))
         scene = start_menu.main_loop(WIN, MENUBACKGROUND, CLOCK)
     elif scene == "TypingGame":
-        typing_game = TypingGame(graph)
+        typing_game = TypingGame(graph, FEATURE_CONTROL)
         scene, score = typing_game.main_loop(WIN, CLASSROOM, CLOCK)
         upload_game_score(USERNAME, score)
     elif scene == "TypingTest":
-        typing_test = TypingTest()
+        typing_test = TypingTest(FEATURE_CONTROL)
         scene, words_per_minute, errors = typing_test.main_loop(WIN, MENUBACKGROUND, CLOCK)
         upload_test_score(USERNAME, words_per_minute, errors)
     elif scene == "TestSummary":
         # return wpm, errors and statistics 
         # test_summary = TestSummaryMenu(words_per_minute, errors)
         test_summary = Menu()
-        test_summary.add_title(Button(f"WPM : {words_per_minute}", WIDTH / 2, (HEIGHT/2)))
-        test_summary.add_title(Button(f"ERRORS : {errors}", WIDTH / 2, HEIGHT/4))
-        test_summary.add_button("StartMenu", Button("Main Menu", WIDTH *2/3, 0.75 * HEIGHT))
-        test_summary.add_button("TypingTest", Button("Play Again", WIDTH / 3, 0.75 * HEIGHT))
+        test_summary.add_title(Button(f"WPM : {words_per_minute}", WIDTH / 2, (HEIGHT/2), FEATURE_CONTROL))
+        test_summary.add_title(Button(f"ERRORS : {errors}", WIDTH / 2, HEIGHT/4, FEATURE_CONTROL))
+        test_summary.add_button("StartMenu", Button("Main Menu", WIDTH *2/3, 0.75 * HEIGHT, FEATURE_CONTROL))
+        test_summary.add_button("TypingTest", Button("Play Again", WIDTH / 3, 0.75 * HEIGHT, FEATURE_CONTROL))
         scene = test_summary.main_loop(WIN, MENUBACKGROUND, CLOCK)
     elif scene == "GameSummary":
         # return score, record high score. 
         # game_summary = GameSummaryMenu(score=typing_game.scoreboard.score)
         game_summary = Menu()
-        game_summary.add_title(Button(f"Score : {score}", WIDTH / 2, (HEIGHT*0.75)))
-        game_summary.add_button("StartMenu", Button(f"Main Menu", WIDTH / 2, HEIGHT/2))
-        game_summary.add_button("TypingGame", Button("Play again", WIDTH / 2, 0.25 * HEIGHT))
+        game_summary.add_title(Button(f"Score : {score}", WIDTH / 2, (HEIGHT*0.75), FEATURE_CONTROL))
+        game_summary.add_button("StartMenu", Button(f"Main Menu", WIDTH / 2, HEIGHT/2, FEATURE_CONTROL))
+        game_summary.add_button("TypingGame", Button("Play again", WIDTH / 2, 0.25 * HEIGHT, FEATURE_CONTROL))
         scene = game_summary.main_loop(WIN, MENUBACKGROUND, CLOCK)
     elif scene == "ResultViewerTest":
         test_scores = get_user_test_scores(USERNAME)
@@ -100,3 +103,12 @@ while True:
         result_thread = threading.Thread()
         result_thread = threading.Thread(target=make_result_thread, kwargs={"columns": ("username", "score", "Date"), "results":game_scores, "thread":result_thread})
         result_thread.start()
+    elif scene == "ChangeSettings":
+        scene = "StartMenu"
+        example = Settings()
+        example.mainloop()
+        example.destroy()
+        print("Stioll going ")
+
+        FEATURE_CONTROL.reset()
+

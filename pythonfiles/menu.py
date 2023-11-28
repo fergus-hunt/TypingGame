@@ -5,7 +5,7 @@ from button import Button
 pygame.init()
 freetype.init()
 
-FONT = freetype.Font(".\\images\\scary_font.ttf", 50)
+# FONT = freetype.Font(".\\images\\scary_font.ttf", 50)
 HEIGHT = 965
 WIDTH = 1285
 
