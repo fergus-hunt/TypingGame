@@ -75,7 +75,7 @@ class TestText:
                 x_val += metric[4]
                 completed += metric[4]
             elif (not self.characters_completed[index-1] == "Na") and self.characters_completed[index] == "Na" and index != 0: 
-                self.feature_control.font_static.render_to(text_surface, (x_val, self.baseline), character, "blue")
+                self.feature_control.font_static.render_to(text_surface, (x_val, self.baseline), character, self.feature_control.colour)
                 x_val += metric[4] 
             elif self.characters_completed[index] == "Na":
                 self.feature_control.font_static.render_to(text_surface, (x_val, self.baseline), character, 'white')
