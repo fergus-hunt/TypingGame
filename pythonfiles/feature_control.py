@@ -19,7 +19,7 @@ class FeatureControl:
         self.keysound = pygame.mixer.Sound(ALL_SETTINGS["Keysound"])
         self.font_static = freetype.Font(ALL_SETTINGS["Font"], 50)
         self.font_static.origin = True
-        self.font_dynamic = freetype.Font(ALL_SETTINGS["Font"], 50)
+        self.font_dynamic = freetype.Font(ALL_SETTINGS["Font"], 75)
         self.colour = ALL_SETTINGS["Colour"]
         self.music = pygame.mixer.Sound(ALL_SETTINGS["Music"])
         

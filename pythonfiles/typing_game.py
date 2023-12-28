@@ -36,7 +36,7 @@ class TypingGame:
     def alert(self, screen):
         """shows the current round within pygame screen"""
         if self.scoreboard.score % 100 == 0:
-            alert_image, alert_rect = self.feature_control.font_dynamic.render(f"Round {self.scoreboard.score}")
+            alert_image, alert_rect = self.feature_control.font_dynamic.render(f"Round {self.scoreboard.score}", self.feature_control.colour)
             alert_rect.center = (WIDTH / 2, HEIGHT / 5)
             screen.blit(alert_image, alert_rect)
 

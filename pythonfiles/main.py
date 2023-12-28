@@ -61,7 +61,7 @@ while True:
     if scene == 'StartMenu':
         start_menu = Menu()
         start_menu.add_button("TypingGame", Button("Play Game", WIDTH/2, HEIGHT * 0.25, FEATURE_CONTROL))
-        start_menu.add_button("TypingTest", Button( "Take Test", WIDTH / 2, HEIGHT / 2, FEATURE_CONTROL))
+        start_menu.add_button("TypingTest", Button( "Take Test", WIDTH *1/3, HEIGHT / 2, FEATURE_CONTROL))
         start_menu.add_button("ResultViewerTest", Button("View Test Stats", WIDTH*2/3, 0.75 * HEIGHT, FEATURE_CONTROL))
         start_menu.add_button("ResultViewerGame", Button("View Game Stats", WIDTH / 3, 0.75 * HEIGHT, FEATURE_CONTROL))
         start_menu.add_button("ChangeSettings", Button("ChangeSettings", WIDTH *2/3, 0.5 * HEIGHT, FEATURE_CONTROL))
