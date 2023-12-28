@@ -1,6 +1,6 @@
 {
-    "Font": ".\\images\\font\\scary_fon.ttf",
-    "Keysound": ".\\images\\keysound\\shot.mp3",
+    "Font": ".\\images\\font\\scary_font.ttf",
+    "Keysound": ".\\images\\keysound\\typewriter.wav",
     "Colour": "Blue",
-    "Music": ".\\images\\music\\epic.mp3"
+    "Music": ".\\images\\music\\daft.mp3"
 }
