@@ -12,14 +12,13 @@ from menu import Menu # adding menu functionality
 
 
 
-from button import MenuFeature
+from menu_feature import MenuFeature
 from user_manager import UserManager
 from typing_test import TypingTest
 from typing_game import TypingGame
 from feature_control import FeatureControl
 import threading
 from settings import Settings
-
 freetype.init()
 
 
@@ -43,12 +42,12 @@ CLOCK = pygame.time.Clock() # Global constant
 
 # FONT = freetype.Font(".\\images\\scary_font.ttf", 30)
 # FONT.origin = True
-MainThread = threading.current_thread()
+MainThread = threading.current_thread() # making the thread for pygame windows. 
 # MainThread.start()
 # all_texts = pygame.sprite.Group(
 
 
-with open("./database/graph.json") as file:
+with open("./database/graph.json") as file: # Variable stores the distance and connections between all nodes / checkpoints
     graph = json.loads(file.read())
 
 def make_result_thread(columns, results, thread):
@@ -62,20 +61,21 @@ def make_result_thread(columns, results, thread):
 
     
 
-FEATURE_CONTROL = FeatureControl()
+FEATURE_CONTROL = FeatureControl() # class that read/writes to and frame settings_options, controls user-specific features. 
 
-while True:
-    message = f"Game Stage is : {SCENE}"
-    messagebox.showinfo(title="Testing", message=message)
+while True: # Main game loop, this is how different game stages are reached, moving between menu's 
+    
+    message = f"Game Stage is : {SCENE}" # testing strategy 
+    messagebox.showinfo(title="Testing", message=message) # This shows the curretn game stage, ensures SCENE is changing correctly
 
     SCENE = "StartMenu"
     if SCENE == 'StartMenu':
         start_menu = Menu()
-        start_menu.add_button("TypingGame", MenuFeature("Play Game", WIDTH/2, HEIGHT * 0.25, FEATURE_CONTROL))
-        start_menu.add_button("TypingTest", MenuFeature( "Take Test", WIDTH *1/3, HEIGHT / 2, FEATURE_CONTROL))
-        start_menu.add_button("ResultViewerTest", MenuFeature("View Test Stats", WIDTH*2/3, 0.75 * HEIGHT, FEATURE_CONTROL))
-        start_menu.add_button("ResultViewerGame", MenuFeature("View Game Stats", WIDTH / 3, 0.75 * HEIGHT, FEATURE_CONTROL))
-        start_menu.add_button("ChangeSettings", MenuFeature("ChangeSettings", WIDTH *2/3, 0.5 * HEIGHT, FEATURE_CONTROL))
+        start_menu.add_button("TypingGame", MenuFeature("Play Game", WIDTH/2, HEIGHT * 0.25, FEATURE_CONTROL)) # Button to play game 
+        start_menu.add_button("TypingTest", MenuFeature( "Take Test", WIDTH *1/3, HEIGHT / 2, FEATURE_CONTROL)) # button to take test 
+        start_menu.add_button("ResultViewerTest", MenuFeature("View Test Stats", WIDTH*2/3, 0.75 * HEIGHT, FEATURE_CONTROL)) # button to view test results 
+        start_menu.add_button("ResultViewerGame", MenuFeature("View Game Stats", WIDTH / 3, 0.75 * HEIGHT, FEATURE_CONTROL))# button to view game results 
+        start_menu.add_button("ChangeSettings", MenuFeature("ChangeSettings", WIDTH *2/3, 0.5 * HEIGHT, FEATURE_CONTROL))# button to change game features. 
         SCENE = start_menu.main_loop(WIN, MENUBACKGROUND, CLOCK)
         
         

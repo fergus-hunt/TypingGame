@@ -1,6 +1,4 @@
-from pygame import freetype 
 import pygame 
-from button import MenuFeature
 
 pygame.init()
 
