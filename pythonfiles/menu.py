@@ -1,61 +1,40 @@
 from pygame import freetype 
 import pygame 
-from button import Button
+from button import MenuFeature
 
 pygame.init()
-freetype.init()
-
-# FONT = freetype.Font(".\\images\\scary_font.ttf", 50)
-HEIGHT = 965
-WIDTH = 1285
 
 class Menu:
     def __init__(self) -> None:
-        self.button_dict = {}
-        self.title_array = []
-        # self.button_dict["TypingGame"] = (Button("Play Game", WIDTH/2, HEIGHT * 0.25))
-        # self.button_dict["TypingTest"]=Button( "Take Test", WIDTH / 2, HEIGHT / 2)
-        # self.button_dict["ResultViewer"]=(Button("View Stats", WIDTH / 2, 0.75 * HEIGHT))
-        # self.play_surface, self.play_button = FONT.render("Play Game", 'blue')
-        # self.stats_surface, self.stats_button = FONT.render("View Stats", 'blue')
-        # self.test_surface, self.test_button = FONT.render("Take Test", "blue")
+        self.button_dict = {} # Buttons that will be interactive on menu 
+        self.title_array = [] # On screen text that will show information 
     
-    def add_button(self, command, button): 
-        self.button_dict[command] = button
+    def add_button(self, command, button): # Add different buttons for different purposes. 
+        self.button_dict[command] = button 
 
-    def add_title(self, title): 
-        self.title_array.append(title)
+    def add_title(self, title): # add different titles to display information
+        self.title_array.append(title) # Adding title 
     
-
-    def main_loop(self, screen, background, clock):
+    def main_loop(self, screen, background, clock): # What makes menu interactive
         """Main pygame loop, shows buttons to play game, take the test and view user statistics"""
         while True:
             clock.tick(60)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+            for event in pygame.event.get(): # Iterating through all events 
+                if event.type == pygame.QUIT: # registering quit event
                     pygame.quit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    for button in self.button_dict:
-                        if self.button_dict[button].rect.collidepoint(event.pos):
-                            return button
-                    # elif self.button_dict[1].rect.collidepoint(event.pos):
-                    #     return "TypingTest"
-                    # elif self.button_dict[2].rect.collidepoint(event.pos):
-                    #     database_manager = DatabaseManager()
-                    #     userresult = database_manager.get_user_scores()
-                    #     results = ResultViewer(userresult)
+                if event.type == pygame.MOUSEBUTTONDOWN: # checking for any event that would classify as button being pressed
+                    for command in self.button_dict: # iterating through the buttons 
+                        if self.button_dict[command].rect.collidepoint(event.pos): # checking if mouse button was within button borders. 
+                            return command # changing the game state 
 
-            screen.fill('black')
-            screen.blit(background, (0, 0))
+            screen.fill('black') # covering up previous frame actions. 
+            screen.blit(background, (0, 0)) # loading background
             for button in self.button_dict.values(): 
-                button.update(screen)
+                button.update(screen) # rendering all buttons on new screen 
             
-            for title in self.title_array: 
+            for title in self.title_array: # rending all information on screen 
                 title.update(screen)
-            # screen.blit(self.play_surface, self.play_button)
-            # screen.blit(self.test_surface, self.test_button)
-            # screen.blit(self.stats_surface, self.stats_button)
-            pygame.display.update()
+            pygame.display.update() # updating new screen 
 
 
 

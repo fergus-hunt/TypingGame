@@ -130,6 +130,3 @@ class UserManager():
             tkinter.messagebox.showinfo(message='Already username')
             
 
-log = UserManager()
-log.log_in_user()
-log.root.mainloop()
