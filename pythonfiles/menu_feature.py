@@ -1,8 +1,6 @@
 import pygame 
 
-pygame.init() # initialising pygame modules \\
-
-# FONT = freetype.Font(".\\images\\scary_font.ttf", 50)
+pygame.init() # initialising pygame modules
 
 class MenuFeature: 
     def __init__(self, text, x_pos, y_pos, feature_control): # Class constructor

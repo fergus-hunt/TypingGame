@@ -1,4 +1,5 @@
 import pygame
+from tkinter import messagebox
 import pygame.freetype
 import requests
 import time
@@ -6,12 +7,12 @@ import time
 pygame.init()
 pygame.mixer.init()
 
-# FONT = pygame.freetype.Font(".\\images\\scary_font.ttf", 50)
-# FONT.origin = True
+# global constants for window size 
 HEIGHT = 965
 WIDTH = 1285
 
-URL = f"https://api.quotable.io/quotes/random"
+# API generates random quotes 
+URL = f"https://api.quotable.io/quotes/random" 
 
 
 class TestText:
@@ -20,24 +21,34 @@ class TestText:
     def __init__(self, feature_control) -> None:
         self.feature_control = feature_control
         # self.noise = pygame.mixer.Sound("images/typewriter.wav")
+
         self.text = self.get_text()
+        # index of the current position in the text 
         self.next_key = 0
         self.is_complete = False
+
+        # linked array containing letters and typing status 
         self.characters_unicode = [character for character in self.text]
         self.characters_completed = ['Na' for index in range(len(self.characters_unicode))]
         self.rect = self.feature_control.font_static.get_rect(self.text)
         self.baseline = self.rect.y
+        # size of fonts 
         self.metrics = self.feature_control.font_static.get_metrics(self.text)
         self.rect.center = (WIDTH / 2, HEIGHT / 2)
 
     def get_text(self):
-        response = requests.get(URL)
-        response.raise_for_status()
-        self.feature_control.music.play()
-
-        return response.json()[0]["content"]
+        """Fetches a quote from API """
+        try: 
+            response = requests.get(URL)
+            response.raise_for_status()
+            self.feature_control.music.play()
+        except requests.exceptions.ConnectionError: 
+            messagebox.showinfo(title="Error", message="You need a connection to play")
+            return "Invalid sentence"
+        return response.json()[0]["content"] # seperates quote from quote information 
 
     def reset(self):
+        """resets class, sets all attributes back to default state """
         self.text = self.get_text()
         self.next_key = 0
         self.is_complete = False
@@ -47,12 +58,15 @@ class TestText:
         self.metrics = self.feature_control.font_static.get_metrics(self.text)
 
     def register_key(self, event):
+        """registers key press"""
         self.feature_control.keysound.play()
+        # Stops the typing test if last letter has been typed 
         if self.next_key == len(self.characters_completed):
             self.end_time = time.time()
             self.feature_control.music.stop()
             self.is_complete = True
         else:
+            # storing user key in array 
             if event.key == pygame.K_BACKSPACE:
                 self.next_key -= 1
                 self.characters_completed[self.next_key] = 'Na'
@@ -64,22 +78,28 @@ class TestText:
                 self.next_key += 1
 
     def rendering_text(self):
+        # render text on pygame window 
         x_val = 0
         text_surface = pygame.Surface(self.rect.size)
+        #keeps text moving along screen
         completed = -550
-        # coudl make quicker here.
+        # rendering each character individually so they can have different colours 
         for index, metric in zip(range(len(self.characters_unicode)), self.metrics):
             character = self.characters_unicode[index]
+            # Checking if character completed wrong
             if not self.characters_completed[index]:
                 self.feature_control.font_static.render_to(text_surface, (x_val, self.baseline), character, "red")
                 x_val += metric[4]
                 completed += metric[4]
+            # checking if character not completed 
             elif (not self.characters_completed[index-1] == "Na") and self.characters_completed[index] == "Na" and index != 0: 
                 self.feature_control.font_static.render_to(text_surface, (x_val, self.baseline), character, self.feature_control.colour)
                 x_val += metric[4] 
+            # checking character not completed 
             elif self.characters_completed[index] == "Na":
                 self.feature_control.font_static.render_to(text_surface, (x_val, self.baseline), character, 'white')
                 x_val += metric[4]
+            # checking character is completed
             elif self.characters_completed[index]:
                 self.feature_control.font_static.render_to(text_surface, (x_val, self.baseline), character, "green")
                 x_val += metric[4]
@@ -89,11 +109,13 @@ class TestText:
         self.surface = text_surface
 
     def calculating_wpm(self, start_time, end_time):
+        """Calculate teh wpm when text is finished """
         total_word = len(self.text.split())
         total_time = (end_time - start_time) / 60
         return round(total_word / (total_time), 2)
 
-    def calculate_errors(self):
+    def calculate_errors(self): 
+        """Traverses character completed array counting errors """
         sum = 0
         for i in self.characters_completed:
             if not i:
