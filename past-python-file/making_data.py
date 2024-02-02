@@ -1,35 +1,35 @@
-import pandas, json, time, numpy
+import pandas, json, numpy
 import pygame
 
-
+SEAT_WIDTH = 7
 
 def get_distances(positions): 
     df = positions
     dict = {}
     for row in df.keys(): 
         seat_number = int(row)
-        if seat_number % 7 == 0 or seat_number == 0: 
+        if seat_number % SEAT_WIDTH == 0 or seat_number == 0: 
             if seat_number == 21: 
                 neighbours = [22, 14]
             elif  seat_number == 0: 
-                neighbours = [1, 7]
+                neighbours = [1, SEAT_WIDTH]
             else: 
-                neighbours = [seat_number + 1, seat_number - 7, seat_number + 7]
+                neighbours = [seat_number + 1, seat_number - SEAT_WIDTH, seat_number + SEAT_WIDTH]
 
-        elif seat_number % 7 == 6: 
+        elif seat_number % SEAT_WIDTH == 6: 
             if seat_number == 6: 
-                neighbours = [seat_number - 1, seat_number + 7]
+                neighbours = [seat_number - 1, seat_number + SEAT_WIDTH]
             elif seat_number == 27:
-                neighbours = [seat_number -1, seat_number-7]
+                neighbours = [seat_number -1, seat_number-SEAT_WIDTH]
             else: 
-                neighbours = [seat_number - 1, seat_number + 7, seat_number - 7]
+                neighbours = [seat_number - 1, seat_number + SEAT_WIDTH, seat_number - SEAT_WIDTH]
             
         elif seat_number >20: 
-            neighbours = [seat_number + 1, seat_number -1 , seat_number - 7]
-        elif seat_number < 7: 
-            neighbours = [seat_number + 1, seat_number -1, seat_number + 7]
+            neighbours = [seat_number + 1, seat_number -1 , seat_number - SEAT_WIDTH]
+        elif seat_number < SEAT_WIDTH: 
+            neighbours = [seat_number + 1, seat_number -1, seat_number + SEAT_WIDTH]
         else: 
-            neighbours = [seat_number + 1, seat_number -1, seat_number + 7, seat_number - 7]
+            neighbours = [seat_number + 1, seat_number -1, seat_number + SEAT_WIDTH, seat_number - SEAT_WIDTH]
         print("Neightbours: ", neighbours)
         connections = {}
         for person in neighbours:
@@ -46,7 +46,7 @@ def get_distances(positions):
         dict[f"{seat_number}"] = connections
     json_whole = {"positions": positions, "distances": dict}
     json_hwat = json.dumps(json_whole)
-    with open("graph.json", "w") as file: 
+    with open("temporary.json", "w") as file: 
         file.write(json_hwat)
 
 FPS = 60
@@ -70,9 +70,6 @@ while True:
             file = pandas.DataFrame((all_positions))
             jsonstuff = json.dumps(all_positions)
             print(jsonstuff)
-            # with open("positions.json", "w") as newfile: 
-            #     newfile.write(jsonstuff)
-            # time.sleep(5)
             get_distances(all_positions)
             pygame.quit() 
     

@@ -1,4 +1,4 @@
-import pygame, sys, time
+import pygame, sys
 from game_text import GameText
 from pygame import freetype
 from enemy import Enemy
