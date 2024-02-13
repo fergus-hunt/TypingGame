@@ -47,18 +47,18 @@ MainThread = threading.current_thread() # making the thread for pygame windows.
 with open("./database/graph.json") as file: # Variable stores the distance and connections between all nodes / checkpoints
     graph = json.loads(file.read())
 
-def make_result_thread(columns, results, thread):
-    results = ResultViewer(columns, results)
-    results.mainloop()
-    # thread.join()
-    if thread.is_alive(): 
-        thread.join()
+FEATURE_CONTROL = FeatureControl() # class that read/writes to and frame settings_options, controls user-specific features. 
+# def make_result_thread(columns, results, thread):
+#     results = ResultViewer(columns, results, FEATURE_CONTROL)
+#     results.mainloop()
+#     # thread.join()
+#     if thread.is_alive(): 
+#         thread.join()
     
 # get a new font.
 
     
 
-FEATURE_CONTROL = FeatureControl() # class that read/writes to and frame settings_options, controls user-specific features. 
 
 while True: # Main game loop, this is how different game stages are reached, moving between menu's 
     
@@ -101,25 +101,29 @@ while True: # Main game loop, this is how different game stages are reached, mov
         game_summary.add_title(MenuFeature(f"Score : {score}", WIDTH / 2, (HEIGHT*0.75), FEATURE_CONTROL))
         game_summary.add_button("StartMenu", MenuFeature(f"Main Menu", WIDTH / 2, HEIGHT/2, FEATURE_CONTROL))
         game_summary.add_button("TypingGame", MenuFeature("Play again", WIDTH / 2, 0.25 * HEIGHT, FEATURE_CONTROL))
-        SCENE = game_summary.main_loop(WIN, MENUBACKGROUND, CLOCK)
+        SCENE = game_summary.main_loop(WIN, MENUBACKGROUND, CLOCK)#
+        
+    # showing test results 
     elif SCENE == "ResultViewerTest":
-        test_scores = get_user_test_scores(USERNAME)
-        SCENE = "StartMenu"
-        result_thread = threading.Thread()
-        result_thread = threading.Thread(target=make_result_thread, kwargs={"columns": ("username", "wpm", "errors", "Date"), "results":test_scores, "thread":result_thread})
-        result_thread.start()
+        SCENE = "StartMenu" # when tkinter window quits start menu is loaded
+        columns = ("username", "wpm", "errors", "Date") # columns within database 
+        test_scores = get_user_test_scores(USERNAME) # getting results from database 
+        results = ResultViewer(columns, test_scores, FEATURE_CONTROL)
+        results.mainloop()
+        
+    # showing game results 
     elif SCENE == "ResultViewerGame":
-        game_scores = get_user_game_scores(USERNAME)
-        SCENE = "StartMenu"
-        result_thread = threading.Thread()
-        result_thread = threading.Thread(target=make_result_thread, kwargs={"columns": ("username", "score", "Date"), "results":game_scores, "thread":result_thread})
-        result_thread.start()
+        SCENE = "StartMenu" # when tkinter window quits start menu is loaded
+        columns = ("username", "Score", "Date") # Columns within database 
+        game_scores = get_user_game_scores(USERNAME) # getting results from database 
+        results = ResultViewer(columns, game_scores, FEATURE_CONTROL)
+        results.mainloop() 
+        
     elif SCENE == "ChangeSettings":
         SCENE = "StartMenu"
         example = Settings()
         example.mainloop()
         example.destroy()
-        print("Stioll going ")
 
         FEATURE_CONTROL.reset()
 

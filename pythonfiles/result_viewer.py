@@ -5,42 +5,42 @@ from tkinter import messagebox
 from tkinter import ttk
 
 class ResultViewer(tkinter.Tk): # inheriting from tkinter window 
-    def __init__(self, column_headings,user_results):
-        tkinter.Tk.__init__(self, "User Results")
+    """Class shows scores that are within typing test or typing game"""
+    def __init__(self, column_headings,user_results, feature_control):
+        tkinter.Tk.__init__(self, "User Results") 
+        self.title("Result Viewer") # window title 
+
 
         self.results = user_results # array of tuples containing all userful information 
-        self.next_screen = "StartMenu"
+        self.next_screen = "StartMenu" # when tkinter window quit this is returned
         graph_button = tkinter.Button(text="Show graph", command=self.show_graph)
         graph_button.grid(column=0, row=0, columnspan=3)
 
         # styling the window for better visualisation 
         self.style = ttk.Style()
-        self.style.theme_use("clam") 
-        self.style.configure("Treeview", background="black", 
-                             fieldbackground="black", foreground="blue")
+        self.style.theme_use("clam") # preset theme 
+        self.style.configure("Treeview", background="white", 
+                             fieldbackground="white", foreground=feature_control.colour)
         self.style.configure("Treeview.Columns", width=20)
         self.style.configure("Treeview.Heading", background="white")                             
 
-        # size that contains correct aspect ratio 
-        self.geometry("620x200")
         
-        # initaliazing different headings, make more reusable. 
+        # Initializing treeview element and settings column identifiers
         self.graph = ttk.Treeview(master=self, columns=column_headings, show='headings')
-        for index in range(len(column_headings)): 
-            heading = column_headings[index]
-            self.graph.heading(heading, text=heading)
-            self.graph.column(f'# {index + 1}', anchor=CENTER)
-            
-        # Function to display record information 
         self.graph.bind("<<TreeviewSelect>>", self.item_view)
         self.graph.grid(row=1, column=0)
+        
+        # making headings
+        for index in range(len(column_headings)): 
+            heading = column_headings[index]
+            self.graph.heading(heading, text=heading) # placing heading text onto columns
+            self.graph.column(f'# {index + 1}', anchor=CENTER) # centering heading on column
 
-        # Implements scrolling
-        scrollbar = ttk.Scrollbar(self, orient=tkinter.VERTICAL, command=self.graph.yview)
-        self.graph.configure(yscroll=scrollbar.set)
-        scrollbar.grid(row=1, column=1, sticky='ns')
-
-        # adding results to the window 
+        # Implements vertical scrolling
+        vertical_scrollbar = ttk.Scrollbar(self, orient=tkinter.VERTICAL, command=self.graph.yview)
+        self.graph.configure(yscroll=vertical_scrollbar.set) # linking scrollbar and graph
+        vertical_scrollbar.grid(row=1, column=1, sticky='ns') # placing scrollbar on window 
+                # Function to display record information 
         for result in user_results:
             self.graph.insert('', tkinter.END, values=result)
             
