@@ -8,18 +8,14 @@ pygame.init()
 # FONT = pygame.freetype.Font(".\\images\\scary_font.ttf", 30)
 # FONT.origin = True
 
-API_TOKEN = "***REMOVED***"
-URL = f"https://quotes.rest/qod.json?api_key={API_TOKEN}" # Quotes destination 
-
-
 class GameText(pygame.sprite.Sprite): # inheriting from pygame sprite 
     """renders new text, takes user key presses, analyses data"""
     def __init__(self, x, y, node, feature_control) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.feature_control = feature_control
         # initializing text from API 
-        self.text = ""
-        self.get_text()
+        self.text = "test"
+        # self.get_text()
         # loading user specific features 
         self.rect = self.feature_control.font_static.get_rect(self.text) 
         self.metrics = self.feature_control.font_static.get_metrics(self.text)
@@ -59,11 +55,9 @@ class GameText(pygame.sprite.Sprite): # inheriting from pygame sprite
             character = self.characters_unicode[index]
             # rendering the correct colour based on user input. 
             if self.characters_completed[index] == "Na":
-                self.feature_control.font_static.render_to(self.image, (x_val, self.baseline), character, 'white')
+                self.feature_control.font_static.render_to(self.image, (x_val, self.baseline), character, self.feature_control.colour)
                 x_val += metric[4]
             elif self.characters_completed[index]:
                 self.feature_control.font_static.render_to(self.image, (x_val, self.baseline), character, "green")
                 x_val += metric[4]
-            else:
-                self.feature_control.font_static.render_to(self.image, (x_val, self.baseline), character, "red")
-                x_val += metric[4]
+

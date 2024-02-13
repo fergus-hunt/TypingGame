@@ -1,6 +1,6 @@
 {
-    "Font": ".\\images\\font\\scary_font.ttf",
-    "Keysound": ".\\images\\keysound\\typewriter.wav",
+    "Font": ".\\images\\font\\calibri.ttf",
+    "Keysound": ".\\images\\keysound\\beep.wav",
     "Colour": "Blue",
-    "Music": ".\\images\\music\\daft.mp3"
+    "Music": ".\\images\\music\\hitman.mp3"
 }

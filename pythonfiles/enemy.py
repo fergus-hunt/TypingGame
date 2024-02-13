@@ -4,7 +4,7 @@ from game_entity import GameEntity
 
 class Enemy(GameEntity): # Inheriting from game entity 
     def __init__(self): 
-        GameEntity.__init__(self, f"./images/enemy-skeleton/skeleton", "1", (177,504), 20)
+        GameEntity.__init__(self, f"./images/enemy-skeleton/skeleton", "0", (177,504), 20)
         self.path = [] # Array of nodes 
         self.stopped_moving = True # is moving
 

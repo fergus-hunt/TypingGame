@@ -129,7 +129,6 @@ class TypingGame:
         """Main pygame loop where the user plays the game, updates screen and register events """
 
         self.calculate_enemy_path() # using dijkstras algorithm to find enemy path 
-        self.enemy.movement_steps(self.df["positions"][f"{self.enemy.current_node}"])
         self.feature_control.music.play() # play game music 
         entity_update_rate = 0
         # main loop 
@@ -149,9 +148,12 @@ class TypingGame:
             # character has reached new checkpoint 
             if self.character.stopped_moving:
                 self.character.stopped_moving = False
-                self.enemy.user_node = self.character.current_node # updating the new nodes 
-                self.calculate_enemy_path() # calculating new enemy shortest path 
                 self.make_new_text_sprites() # reinitializing neighbouring text 
+                self.enemy.user_node = self.character.current_node # updating the new nodes 
+                self.calculate_enemy_path() # calculating new enemy shortest path because user position has changed.
+                
+                
+                
                 self.scoreboard.update_scoreboard() # adding to scoreboard 
 
             # enemy has reached new checkpoint

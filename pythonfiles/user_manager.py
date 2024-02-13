@@ -120,10 +120,19 @@ class UserManager():
 
     def new_create_user_record(self, username, password, full_name, old_frame):
         """Inputs the new user account in the database, then returns the window that allows them to login"""
-        pattern = "^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$" # regex that tests for a secure password 
+        pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$" # regex that tests for a secure password 
+        
+        
         result = re.findall(pattern, password) # returns a bool to ensure that password is valid. 
+        # Stops inputting data if password doesn't meet requirements 
         if not result: 
-            messagebox.showinfo(title="Account Error", message="Password isn't complex enough") # Stops inputting data if password doesn't meet requirements 
+            if len(password) < 8: # password isn't long enough 
+                messagebox.showinfo(title="Account Error", message="Password needs to be at least 8 characterse") 
+            # password isn't complex enough
+            else: 
+                messagebox.showinfo(title="Account Error", 
+                                    message="Password needs to have uppercase letters, a digit and a special character") 
+                
         else: 
             users_database = get_username_password(username) # database function to return records with same username 
             if len(users_database) == 0:  # Checks that there are no other username's that are the same 
