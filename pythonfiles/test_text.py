@@ -12,7 +12,7 @@ HEIGHT = 965
 WIDTH = 1285
 
 # API generates random quotes 
-URL = f"https://api.quotable.io/quotes/random" 
+URL = f"http://api.quotable.io/quotes/random" 
 
 
 class TestText:

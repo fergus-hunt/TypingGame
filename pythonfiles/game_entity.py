@@ -8,7 +8,11 @@ class GameEntity(pygame.sprite.Sprite): # inheriting from pygame sprite
         pygame.sprite.Sprite.__init__(self)
         self.current_node = current_node
         self.image_path = path.Path(image_path) 
-        self.image = pygame.transform.scale(pygame.image.load(f"{image_path}-left/" + (os.listdir(f"{image_path}-left/")[0])),(80, 80)) # starting image
+        self.image = pygame.transform.scale(
+            pygame.image.load(
+                f"{image_path}-left/" + (os.listdir(f"{image_path}-left/")[0])
+                ),(80, 80)
+            ) # starting image
         self.rect = self.image.get_rect()
         self.rect.center = starting_coordinates
         self.movement_speed = movement 
@@ -33,6 +37,8 @@ class GameEntity(pygame.sprite.Sprite): # inheriting from pygame sprite
             del self.next_positions[0]
 
     def get_animations(self, direction):
+        """When entity begins moving in another direction, the correct animations are fetched and loaded 
+        into a queue"""
         newPath = path.Path(f"{self.image_path}-{direction}/") # changing direction 
         for image in os.listdir(newPath):  # loadin the images into array to show moving animation
             pygameImage = pygame.transform.scale(pygame.image.load(f"{newPath}{image}"), (80, 80))

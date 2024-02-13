@@ -2,7 +2,8 @@
     "Font":{
         "Scary":".\\images\\font\\scary_font.ttf", 
         "Weird":".\\images\\font\\weird.ttf", 
-        "Agh":".\\images\\font\\scary_fon.ttf"
+        "Calibri":".\\images\\font\\calibri.ttf",
+        "Old":".\\images\\font\\old.ttf"
     },
     "Keysound":{
         "Typewrite":".\\images\\keysound\\typewriter.wav",
