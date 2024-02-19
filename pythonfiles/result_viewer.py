@@ -27,10 +27,14 @@ class ResultViewer(tkinter.Tk): # inheriting from tkinter window
         
         # Initializing treeview element and settings column identifiers
         self.graph = ttk.Treeview(master=self, columns=column_headings, show='headings')
-        self.graph.bind("<<TreeviewSelect>>", self.item_view)
-        self.graph.grid(row=1, column=0)
         
+        #linking the callback function self.item_view with selecting record
+        self.graph.bind("<<TreeviewSelect>>", self.item_view)
+        
+        
+        self.graph.grid(row=1, column=0)
         # making headings
+        # Function to display record information 
         for index in range(len(column_headings)): 
             heading = column_headings[index]
             self.graph.heading(heading, text=heading) # placing heading text onto columns
@@ -40,22 +44,23 @@ class ResultViewer(tkinter.Tk): # inheriting from tkinter window
         vertical_scrollbar = ttk.Scrollbar(self, orient=tkinter.VERTICAL, command=self.graph.yview)
         self.graph.configure(yscroll=vertical_scrollbar.set) # linking scrollbar and graph
         vertical_scrollbar.grid(row=1, column=1, sticky='ns') # placing scrollbar on window 
-                # Function to display record information 
         for result in user_results:
             self.graph.insert('', tkinter.END, values=result)
             
         self.mainloop()
 
     def item_view(self, event): 
-        for thing in self.graph.selection():
-            item = self.graph.item(thing)
+        """Shows the user the record they have left clicked on"""
+        for recordID in self.graph.selection(): # iterating through selection
+            item = self.graph.item(recordID) # finding actual record
+            print(item)
             # displaying window for selected record 
-            messagebox.showinfo(title='Result',
-                                message=f"First Item : {item['values'][0]}Second Item : {item['values'][1]}")
+            messagebox.showinfo(title=f'Record',
+                                message=f"Score : {item['values'][1]}\nDate : {item['values'][2].split(',')[0]}")
             
     def show_graph(self):
         """showing graph of results over time"""
-        fig, ax = pyplot.subplots()
+        fig, ax = pyplot.subplots() # configuring graph 
 
         # adding user results 
         ax.plot([itemTwo[len(self.results[0])-1].split(',')[0] for itemTwo in self.results], [item[1] for item in self.results])
