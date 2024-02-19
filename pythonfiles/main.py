@@ -105,7 +105,7 @@ while True: # Main game loop, this is how different game stages are reached, mov
         
     # showing test results 
     elif SCENE == "ResultViewerTest":
-        SCENE = "StartMenu" # when tkinter window quits start menu is loaded
+        SCENE = "StartMenu" # when tkinter window quits start menu is loadedj
         columns = ("username", "wpm", "errors", "Date") # columns within database 
         test_scores = get_user_test_scores(USERNAME) # getting results from database 
         results = ResultViewer(columns, test_scores, FEATURE_CONTROL)
