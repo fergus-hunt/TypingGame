@@ -166,6 +166,7 @@ class TypingGame:
 
             # enemy node = characater node so game is over 
             if self.enemy.current_node == self.character.current_node:
+                self.feature_control.music.stop()
                 return "GameSummary", self.scoreboard.score
 
             # if new round the enemy movement speed is incremented 

@@ -14,8 +14,7 @@ class GameText(pygame.sprite.Sprite): # inheriting from pygame sprite
         pygame.sprite.Sprite.__init__(self)
         self.feature_control = feature_control
         # initializing text from API 
-        self.text = "test"
-        # self.get_text()
+        self.get_text()
         # loading user specific features 
         self.rect = self.feature_control.font_static.get_rect(self.text) 
         self.metrics = self.feature_control.font_static.get_metrics(self.text)
