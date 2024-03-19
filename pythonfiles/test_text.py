@@ -1,8 +1,5 @@
-import pygame
+import pygame, pandas, pygame.freetype, requests, time, random
 from tkinter import messagebox
-import pygame.freetype
-import requests
-import time
 
 pygame.init()
 pygame.mixer.init()
@@ -38,14 +35,18 @@ class TestText:
 
     def get_text(self):
         """Fetches a quote from API """
+        
         try: 
             response = requests.get(URL)
             response.raise_for_status()
-            self.feature_control.music.play()
+            return response.json()[0]["content"] # seperates quote from quote information 
         except requests.exceptions.ConnectionError: 
             messagebox.showinfo(title="Error", message="You need a connection to play")
-            return "Invalid sentence"
-        return response.json()[0]["content"] # seperates quote from quote information 
+            # reading sentences from csv file 
+            pd = pandas.read_csv('database\data.csv')
+            text_index = random.randint(0, len(pd)-1) # selecting random ID 
+            text = pd.loc[text_index] # returning sentence at taht ID S
+            return text
 
     def reset(self):
         """resets class, sets all attributes back to default state """

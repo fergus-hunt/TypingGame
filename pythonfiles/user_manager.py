@@ -7,9 +7,6 @@ from database_manager import *
 import tkinter.font
 # generate good user passworeds
 
-# style = Style()
-
-
 class UserManager():
     def __init__(self) -> None:
         self.root = tkinter.Tk() # The tkitner window the frames will be placed ontop of 
