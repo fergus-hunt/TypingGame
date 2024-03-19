@@ -1,6 +1,6 @@
 {
-    "Font": ".\\images\\font\\calibri.ttf",
+    "Font": ".\\images\\font\\scary_font.ttf",
     "Keysound": ".\\images\\keysound\\typewriter.wav",
-    "Colour": "Red",
+    "Colour": "Blue",
     "Music": ".\\images\\music\\daft.mp3"
 }

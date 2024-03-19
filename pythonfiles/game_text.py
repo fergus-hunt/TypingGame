@@ -5,9 +5,6 @@ import string
 
 pygame.init()
 
-# FONT = pygame.freetype.Font(".\\images\\scary_font.ttf", 30)
-# FONT.origin = True
-
 class GameText(pygame.sprite.Sprite): # inheriting from pygame sprite 
     """renders new text, takes user key presses, analyses data"""
     def __init__(self, x, y, node, feature_control) -> None:

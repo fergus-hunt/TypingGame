@@ -20,10 +20,11 @@ freetype.init()
 
 
 
-Login = UserManager()
-Login.log_in_user()
-Login.root.mainloop()
-USERNAME = Login.username
+# Login = UserManager()
+# Login.log_in_user()
+# Login.root.mainloop()
+# USERNAME = Login.username
+USERNAME ="Fergus" 
 
 
 pygame.init() # initialising pygame modules 
@@ -36,35 +37,16 @@ SCENE = 'StartMenu' # Current game state, dictates what window will be shown.
 CLOCK = pygame.time.Clock() # Global constant
 
 
-# FONT = freetype.Font(".\\images\\scary_font.ttf", 30)
-# FONT.origin = True
-MainThread = threading.current_thread() # making the thread for pygame windows. 
-# MainThread.start()
-# all_texts = pygame.sprite.Group(
-
-
 with open("./database/graph.json") as file: # Variable stores the distance and connections between all nodes / checkpoints
     graph = json.loads(file.read())
 
 FEATURE_CONTROL = FeatureControl() # class that read/writes to and frame settings_options, controls user-specific features. 
-# def make_result_thread(columns, results, thread):
-#     results = ResultViewer(columns, results, FEATURE_CONTROL)
-#     results.mainloop()
-#     # thread.join()
-#     if thread.is_alive(): 
-#         thread.join()
-    
-# get a new font.
 
     
 
 
 while True: # Main game loop, this is how different game stages are reached, moving between menu's 
     
-    # message = f"Game Stage is : {SCENE}" # testing strategy 
-    # messagebox.showinfo(title="Testing", message=message) # This shows the curretn game stage, ensures SCENE is changing correctly
-
-    # SCENE = "StartMenu"
     if SCENE == 'StartMenu':
         start_menu = Menu()
         start_menu.add_button("TypingGame", MenuFeature("Play Game", WIDTH/2, HEIGHT * 0.25, FEATURE_CONTROL)) # Button to play game 
@@ -73,8 +55,6 @@ while True: # Main game loop, this is how different game stages are reached, mov
         start_menu.add_button("ResultViewerGame", MenuFeature("View Game Stats", WIDTH / 3, 0.75 * HEIGHT, FEATURE_CONTROL))# button to view game results 
         start_menu.add_button("ChangeSettings", MenuFeature("ChangeSettings", WIDTH *2/3, 0.5 * HEIGHT, FEATURE_CONTROL))# button to change game features. 
         SCENE = start_menu.main_loop(WIN, MENUBACKGROUND, CLOCK)
-        
-        
         
     elif SCENE == "TypingGame":
         typing_game = TypingGame(graph, FEATURE_CONTROL)
@@ -85,8 +65,6 @@ while True: # Main game loop, this is how different game stages are reached, mov
         SCENE, words_per_minute, errors = typing_test.main_loop(WIN, MENUBACKGROUND, CLOCK)
         upload_test_score(USERNAME, words_per_minute, errors)
     elif SCENE == "TestSummary":
-        # return wpm, errors and statistics 
-        # test_summary = TestSummaryMenu(words_per_minute, errors)
         test_summary = Menu()
         test_summary.add_title(MenuFeature(f"WPM : {words_per_minute}", WIDTH / 2, (HEIGHT/2), FEATURE_CONTROL))
         test_summary.add_title(MenuFeature(f"ERRORS : {errors}", WIDTH / 2, HEIGHT/4, FEATURE_CONTROL))
@@ -94,8 +72,6 @@ while True: # Main game loop, this is how different game stages are reached, mov
         test_summary.add_button("TypingTest", MenuFeature("Play Again", WIDTH / 3, 0.75 * HEIGHT, FEATURE_CONTROL))
         SCENE = test_summary.main_loop(WIN, MENUBACKGROUND, CLOCK)
     elif SCENE == "GameSummary":
-        # return score, record high score. 
-        # game_summary = GameSummaryMenu(score=typing_game.scoreboard.score)
         game_summary = Menu()
         game_summary.add_title(MenuFeature(f"Score : {score}", WIDTH / 2, (HEIGHT*0.75), FEATURE_CONTROL))
         game_summary.add_button("StartMenu", MenuFeature(f"Main Menu", WIDTH / 2, HEIGHT/2, FEATURE_CONTROL))
@@ -123,6 +99,5 @@ while True: # Main game loop, this is how different game stages are reached, mov
         example = Settings()
         example.mainloop()
         example.destroy()
-
         FEATURE_CONTROL.reset()
 
