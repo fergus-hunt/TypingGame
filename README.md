@@ -1,2 +1,2 @@
-This is the read me file 
-I hope we are able to read this 
+Typing game for A-level computer science coursework. 
+
