@@ -1,5 +1,9 @@
-import requests , pprint
-API_TOKEN = "***REMOVED***"
+import requests , pprint, os
+from dotenv import load_dotenv
+
+load_dotenv
+
+API_TOKEN = os.environ.get("API_TOKEN")
 URL_first = f"https://quotes.rest/quote/random?api_key={API_TOKEN}"
 URL = f"https://api.quotable.io/quotes/random"
 
