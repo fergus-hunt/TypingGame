@@ -4,3 +4,4 @@
 database/*.db
 pythonfiles/__pycache__
 build/
+expression.txt
