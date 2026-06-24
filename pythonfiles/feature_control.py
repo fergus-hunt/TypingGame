@@ -18,7 +18,7 @@ class FeatureControl:
 
     def reset(self): 
         """Load the settings from JSON file and changing attributes"""
-        with open(".\\database\\user_settings.json", "r") as file: 
+        with open("./database/user_settings.json", "r") as file: 
             ALL_SETTINGS= json.loads(file.read()) #Creating dictionary for user settings 
 
         # initializing attributes to the user specific settings

@@ -1,15 +1,15 @@
 {
     "Font":{
-        "Scary":".\\images\\font\\scary_font.ttf", 
-        "Weird":".\\images\\font\\weird.ttf", 
-        "Calibri":".\\images\\font\\calibri.ttf",
-        "Old":".\\images\\font\\old.ttf"
+        "Scary":"./images/font/scary_font.ttf", 
+        "Weird":"./images/font/weird.ttf", 
+        "Calibri":"./images/font/calibri.ttf",
+        "Old":"./images/font/old.ttf"
     },
     "Keysound":{
-        "Typewrite":".\\images\\keysound\\typewriter.wav",
-        "Beep":".\\images\\keysound\\beep.wav",
-        "golf":".\\images\\keysound\\golf.wav", 
-        "Shot":".\\images\\keysound\\shot.mp3"
+        "Typewrite":"./images/keysound/typewriter.wav",
+        "Beep":"./images/keysound/beep.wav",
+        "golf":"./images/keysound/golf.wav", 
+        "Shot":"./images/keysound/shot.mp3"
     }, 
     "Colour":{
         "Blue":"Blue",
@@ -17,8 +17,8 @@
         "Yellow":"Yellow"
     },
     "Music":{
-        "Daft":".\\images\\music\\daft.mp3",
-        "Epic":".\\images\\music\\epic.mp3",
-        "Hitman":".\\images\\music\\hitman.mp3"
+        "Daft":"./images/music/daft.mp3",
+        "Epic":"./images/music/epic.mp3",
+        "Hitman":"./images/music/hitman.mp3"
     }
 }

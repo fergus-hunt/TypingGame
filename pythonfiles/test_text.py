@@ -43,7 +43,7 @@ class TestText:
         except requests.exceptions.ConnectionError: 
             messagebox.showinfo(title="Error", message="You need a connection to play")
             # reading sentences from csv file 
-            pd = pandas.read_csv('database\data.csv')
+            pd = pandas.read_csv('database/data.csv')
             text_index = random.randint(0, len(pd)-1) # selecting random ID 
             text = pd.loc[text_index] # returning sentence at taht ID S
             return text

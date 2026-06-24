@@ -30,8 +30,8 @@ USERNAME ="Fergus"
 pygame.init() # initialising pygame modules 
 HEIGHT = 965 # global constant for all pygame windows 
 WIDTH = 1285 # global constant for all pygame windows 
-CLASSROOM = pygame.image.load(".\\images\\backgrounds\\classroom4.png") # Constnat background 
-MENUBACKGROUND = pygame.transform.scale(pygame.image.load(".\\images\\backgrounds\\haunted_house.jpeg"), (WIDTH, HEIGHT)) # constant background 
+CLASSROOM = pygame.image.load("./images/backgrounds/classroom4.png") # Constnat background 
+MENUBACKGROUND = pygame.transform.scale(pygame.image.load("./images/backgrounds/haunted_house.jpeg"), (WIDTH, HEIGHT)) # constant background 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT)) # Constant window for all pygame stages 
 SCENE = 'StartMenu' # Current game state, dictates what window will be shown. 
 CLOCK = pygame.time.Clock() # Global constant

@@ -69,7 +69,7 @@ class Settings(tkinter.Tk):
                   "Music":ALL_SETTINGS["Music"][self.music_clicked.get()]}
         json_object = json.dumps(values, indent=4)
         # writing new settings into file so can be accessed globally
-        with open(".\\database\\user_settings.json", "w") as outfile: 
+        with open("./database/user_settings.json", "w") as outfile: 
             outfile.write(json_object)
         
         self.quit() # removing tkinter window 
