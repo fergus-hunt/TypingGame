@@ -1,4 +1,7 @@
 .env
 ./.idea
 ./.vs
-./database/*.db
+./database/*.db__pycache__/
+build/
+.idea/
+.vs/
